@@ -1,0 +1,121 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type BusinessAccount {
+  id: ID! 
+  accountName: String!
+  accountEmail: String!
+  accountPassword: String!
+  accountContact: String!
+  accountAddress: String!
+  createdAt: String!
+}
+
+type BusinessCustomer {
+  id: ID!
+  businessAccountId: ID!
+  customerAccountId: ID!
+  customerAccountName: String!
+  customerAccountEmail: String!
+  customerAccountAddress: String!
+  customerJoinedDate: String!
+}
+
+
+type CustomerAccount {
+  id: ID! 
+  accountName: String!
+  accountEmail: String!
+  accountPassword: String!
+  accountContact: String!
+  accountAddress: String!
+  createdAt: String!
+}
+
+type Order {
+  id: ID!
+  productName: String!
+  productUrl: String!
+  productPrice: Float!
+  productPriceCurrency: String!
+  productDescription: String!
+  orderedByCustomerId: ID!
+  orderedFromBusinessId: ID!
+}
+
+
+union LoginAccountDetails = CustomerAccount | BusinessAccount 
+
+type LoginResponse{
+    accessToken: String!
+    accountDetails: LoginAccountDetails! 
+}
+
+type Query {
+  getBusinessAccounts: [BusinessAccount!]!
+  getCustomerAccounts: [CustomerAccount!]!  # Changed to CustomerAccount
+  getCustomersByBusinessId(business_id: ID!): [BusinessCustomer!]!  # Corrected parameter name
+  getCustomerByIdOrEmail(input: AccountQueryInput!): CustomerAccount!
+  getBusinessByIdOrEmail(input: AccountQueryInput!): BusinessAccount!
+  getOrders(input: OrderQueryInput): [Order!]!
+}
+
+type Mutation {
+  createBusinessAcount(input: NewBusinessAccountInput!): BusinessAccount!
+  createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
+  createOrder(input: NewOrderInput!): Order!
+  loginAsCustomer(input: LoginDetailsInput!): LoginResponse!
+  loginAsBusiness(input: LoginDetailsInput!): LoginResponse!
+  deleteCustomerAccount(input: LoginDetailsInput!): String!
+  deleteBusinessAccount(input: LoginDetailsInput!): String!
+  linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
+}
+
+input LinkAccountToBusinessInput{
+     business_email: String!
+     customer_email: String!
+}
+
+input LoginDetailsInput{
+    accountEmail: String!
+    accountPassword: String!
+}
+
+input NewBusinessAccountInput{
+  accountName: String!
+  accountEmail: String!
+  accountPassword: String!
+  accountContact: String!
+  accountAddress: String!
+}
+
+input NewCustomerAccountInput{
+  accountName: String!
+  accountEmail: String!
+  accountPassword: String!
+  accountContact: String!
+  accountAddress: String!
+  businessAccountId: String! 
+}
+
+input OrderQueryInput{
+  business_id: ID
+  customer_id: ID
+}
+
+input AccountQueryInput{
+  account_id: ID
+  account_email: String 
+}
+
+
+input NewOrderInput{
+  productName: String!
+  productUrl: String!
+  productPrice: Float!
+  productPriceCurrency: String!
+  productDescription: String!
+  orderedByCustomerId: ID!
+  orderedFromBusinessId: ID!
+}
