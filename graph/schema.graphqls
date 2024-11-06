@@ -62,7 +62,7 @@ type Query {
 }
 
 type Mutation {
-  createBusinessAcount(input: NewBusinessAccountInput!): BusinessAccount!
+  createBusinessAccount(input: NewBusinessAccountInput!): BusinessAccount!
   createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
   createOrder(input: NewOrderInput!): Order!
   loginAsCustomer(input: LoginDetailsInput!): LoginResponse!

@@ -3,29 +3,20 @@ package graph
 import (
 	db "github.com/siyaramsujan/graphql-api/server_lib"
 	"github.com/siyaramsujan/graphql-api/server_lib/service/account"
-	"gorm.io/gorm"
 )
 
-// This file will not be regenerated automatically.
-//
-// It serves as dependency injection for your app, add any dependencies you require here.
-
-
 type Resolver struct{
-  DB *gorm.DB
-  AccountService *account.AccountService
+  AccountRoutes *account.AccountRoutes
 }
 
 
 func NewServiceResolver() *Resolver{
- 
-  var DB = db.NewPostgresDb()
-  var accountService = account.NewAccountService(DB.DB)
-  
 
+  var DB = db.NewPostgresDb()
+  var AccountRoutes = account.NewAccountRoutes(DB.DB)
+  
   return &Resolver{
-    DB: DB.DB,
-    AccountService: accountService,
+    AccountRoutes: AccountRoutes,
   }
 }
 

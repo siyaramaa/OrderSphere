@@ -7,17 +7,18 @@ package graph
 import (
 	"context"
 	"fmt"
+
 	"github.com/siyaramsujan/graphql-api/graph/model"
 )
 
 // CreateBusinessAcount is the resolver for the createBusinessAcount field.
-func (r *mutationResolver) CreateBusinessAcount(ctx context.Context, input model.NewBusinessAccountInput) (*model.BusinessAccount, error) {
-	return r.AccountService.CreateBusinessAccount(input)
+func (r *mutationResolver) CreateBusinessAccount(ctx context.Context, input model.NewBusinessAccountInput) (*model.BusinessAccount, error) {
+  return r.AccountRoutes.CreateBusinessAccountRoute(ctx, input)
 }
 
 // CreateCustomerAccount is the resolver for the createCustomerAccount field.
 func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error) {
-	return r.AccountService.CreateCustomerAccount(input)
+	return r.AccountRoutes.CreateCustomerAccountRoute(ctx, input)
 }
 
 // CreateOrder is the resolver for the createOrder field.
@@ -27,52 +28,52 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder
 
 // LoginAsCustomer is the resolver for the loginAsCustomer field.
 func (r *mutationResolver) LoginAsCustomer(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error) {
-	return r.AccountService.LoginAsCustomer(input)
+	return r.AccountRoutes.LoginAsCustomerRoute(ctx, input)
 }
 
 // LoginAsBusiness is the resolver for the loginAsBusiness field.
 func (r *mutationResolver) LoginAsBusiness(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error) {
-	return r.AccountService.LoginAsBusiness(input)
+	return r.AccountRoutes.LoginAsBusinessRoute(ctx, input)
 }
 
 // DeleteCustomerAccount is the resolver for the deleteCustomerAccount field.
 func (r *mutationResolver) DeleteCustomerAccount(ctx context.Context, input model.LoginDetailsInput) (string, error) {
-	return r.AccountService.DeleteCustomerAccount(input)
+	return r.AccountRoutes.DeleteCustomerAccountRoute(ctx, input)
 }
 
 // DeleteBusinessAccount is the resolver for the deleteBusinessAccount field.
 func (r *mutationResolver) DeleteBusinessAccount(ctx context.Context, input model.LoginDetailsInput) (string, error) {
-	return r.AccountService.DeleteBusinessAccount(input)
+	return r.AccountRoutes.DeleteBusinessAccountRoute(ctx, input)
 }
 
 // LinkAccountToBusiness is the resolver for the linkAccountToBusiness field.
 func (r *mutationResolver) LinkAccountToBusiness(ctx context.Context, input *model.LinkAccountToBusinessInput) (string, error) {
-    return r.AccountService.LinkAccountToBusiness(*input)
+	return r.AccountRoutes.LinkAccountToBusinessRoute(ctx, input)
 }
 
 // GetBusinessAccounts is the resolver for the getBusinessAccounts field.
 func (r *queryResolver) GetBusinessAccounts(ctx context.Context) ([]*model.BusinessAccount, error) {
-	return r.AccountService.GetListOfBusinessAccounts()
+	return r.AccountRoutes.GetBusinessAccountsRoute(ctx)
 }
 
 // GetCustomerAccounts is the resolver for the getCustomerAccounts field.
 func (r *queryResolver) GetCustomerAccounts(ctx context.Context) ([]*model.CustomerAccount, error) {
-	return r.AccountService.GetListOfCustomerAccounts()
+  return r.AccountRoutes.GetCustomerAccountsRoute(ctx)
 }
 
 // GetCustomersByBusinessID is the resolver for the getCustomersByBusinessId field.
 func (r *queryResolver) GetCustomersByBusinessID(ctx context.Context, businessID string) ([]*model.BusinessCustomer, error) {
-	return r.AccountService.GetListOfBusinessCustomers(businessID)
+	return r.AccountRoutes.GetListOfBusinessCustomersRoute(ctx, businessID)
 }
 
 // GetCustomerByIDOrEmail is the resolver for the getCustomerByIdOrEmail field.
 func (r *queryResolver) GetCustomerByIDOrEmail(ctx context.Context, input model.AccountQueryInput) (*model.CustomerAccount, error) {
-	return r.AccountService.GetCustomerByIdOrEmail(input)
+	return r.AccountRoutes.GetCustomerAccountByIdOrEmailRoute(ctx, input)
 }
 
 // GetBusinessByIDOrEmail is the resolver for the getBusinessByIdOrEmail field.
 func (r *queryResolver) GetBusinessByIDOrEmail(ctx context.Context, input model.AccountQueryInput) (*model.BusinessAccount, error) {
-	return r.AccountService.GetBusinessByIdOrEmail(input)
+	return r.AccountRoutes.GetBusinessAccountByIdOrEmailRoute(ctx, input)
 }
 
 // GetOrders is the resolver for the getOrders field.

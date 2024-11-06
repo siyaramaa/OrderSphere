@@ -83,7 +83,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateBusinessAcount  func(childComplexity int, input model.NewBusinessAccountInput) int
+		CreateBusinessAccount func(childComplexity int, input model.NewBusinessAccountInput) int
 		CreateCustomerAccount func(childComplexity int, input model.NewCustomerAccountInput) int
 		CreateOrder           func(childComplexity int, input model.NewOrderInput) int
 		DeleteBusinessAccount func(childComplexity int, input model.LoginDetailsInput) int
@@ -115,7 +115,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateBusinessAcount(ctx context.Context, input model.NewBusinessAccountInput) (*model.BusinessAccount, error)
+	CreateBusinessAccount(ctx context.Context, input model.NewBusinessAccountInput) (*model.BusinessAccount, error)
 	CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error)
 	CreateOrder(ctx context.Context, input model.NewOrderInput) (*model.Order, error)
 	LoginAsCustomer(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error)
@@ -313,17 +313,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.LoginResponse.AccountDetails(childComplexity), true
 
-	case "Mutation.createBusinessAcount":
-		if e.complexity.Mutation.CreateBusinessAcount == nil {
+	case "Mutation.createBusinessAccount":
+		if e.complexity.Mutation.CreateBusinessAccount == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_createBusinessAcount_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_createBusinessAccount_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateBusinessAcount(childComplexity, args["input"].(model.NewBusinessAccountInput)), true
+		return e.complexity.Mutation.CreateBusinessAccount(childComplexity, args["input"].(model.NewBusinessAccountInput)), true
 
 	case "Mutation.createCustomerAccount":
 		if e.complexity.Mutation.CreateCustomerAccount == nil {
@@ -658,17 +658,17 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Mutation_createBusinessAcount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createBusinessAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	arg0, err := ec.field_Mutation_createBusinessAcount_argsInput(ctx, rawArgs)
+	arg0, err := ec.field_Mutation_createBusinessAccount_argsInput(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
 	args["input"] = arg0
 	return args, nil
 }
-func (ec *executionContext) field_Mutation_createBusinessAcount_argsInput(
+func (ec *executionContext) field_Mutation_createBusinessAccount_argsInput(
 	ctx context.Context,
 	rawArgs map[string]interface{},
 ) (model.NewBusinessAccountInput, error) {
@@ -2023,8 +2023,8 @@ func (ec *executionContext) fieldContext_LoginResponse_accountDetails(_ context.
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_createBusinessAcount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createBusinessAcount(ctx, field)
+func (ec *executionContext) _Mutation_createBusinessAccount(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createBusinessAccount(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2037,7 +2037,7 @@ func (ec *executionContext) _Mutation_createBusinessAcount(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateBusinessAcount(rctx, fc.Args["input"].(model.NewBusinessAccountInput))
+		return ec.resolvers.Mutation().CreateBusinessAccount(rctx, fc.Args["input"].(model.NewBusinessAccountInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2054,7 +2054,7 @@ func (ec *executionContext) _Mutation_createBusinessAcount(ctx context.Context, 
 	return ec.marshalNBusinessAccount2ᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐBusinessAccount(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_createBusinessAcount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createBusinessAccount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -2087,7 +2087,7 @@ func (ec *executionContext) fieldContext_Mutation_createBusinessAcount(ctx conte
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createBusinessAcount_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createBusinessAccount_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -5808,9 +5808,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "createBusinessAcount":
+		case "createBusinessAccount":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createBusinessAcount(ctx, field)
+				return ec._Mutation_createBusinessAccount(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
