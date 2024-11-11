@@ -1,7 +1,10 @@
 package db
 
 import (
+	"fmt"
 	"log"
+	"os"
+
 	"github.com/siyaramsujan/graphql-api/graph/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,10 +15,19 @@ type Postgres struct{
 }
 
 
-var postgresDsn string = "postgres://siyaramsujan:harekrishna@localhost/apitest?sslmode=disable"
+
 
 func NewPostgresDb()(db *Postgres){
 
+    // Using environment variables:
+    dbHost := os.Getenv("DB_HOST")
+    dbPort := os.Getenv("DB_PORT")
+    dbUser := os.Getenv("DB_USER")
+    dbPassword := os.Getenv("DB_PASSWORD")
+    dbName := os.Getenv("DB_NAME")
+
+
+  var postgresDsn string = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName) 
   gormDb, err := gorm.Open(postgres.Open(postgresDsn), &gorm.Config{})
 
   if err != nil{

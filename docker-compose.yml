@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ordersphere-server:
+    image: golang:1.23
+    working_dir: /ordersphere-server
+    volumes:
+      - .:/ordersphere-server
+    command: sh -c "go mod download && go build -buildvcs=false -o app && ./app"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=siyaramsujan
+      - DB_PASSWORD=harekrishna
+      - DB_NAME=apitest
+    # restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - fullstack
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: siyaramsujan
+      POSTGRES_PASSWORD: harekrishna 
+      POSTGRES_DB: apitest
+    restart: always
+    ports:
+      - "3010:5432"
+    networks:
+      - fullstack
+
+networks:
+  fullstack:
+    driver: bridge
