@@ -6,7 +6,7 @@ services:
     working_dir: /ordersphere-server
     volumes:
       - .:/ordersphere-server
-    command: sh -c "go mod download && go build -buildvcs=false -o app && ./app"
+    command: sh -c "go mod download && go build -buildvcs=false -o /tmp/app && /tmp/app"
     environment:
       - DB_HOST=postgres
       - DB_PORT=5432
