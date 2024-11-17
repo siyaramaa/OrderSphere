@@ -81,29 +81,29 @@ type NewCustomerAccountInput struct {
 }
 
 type NewOrderInput struct {
-	ProductName           string  `json:"productName"`
-	ProductURL            string  `json:"productUrl"`
-	ProductPrice          float64 `json:"productPrice"`
-	ProductPriceCurrency  string  `json:"productPriceCurrency"`
-	ProductDescription    string  `json:"productDescription"`
-	OrderedByCustomerID   string  `json:"orderedByCustomerId"`
-	OrderedFromBusinessID string  `json:"orderedFromBusinessId"`
+	ProductName              string  `json:"productName"`
+	ProductURL               string  `json:"productUrl"`
+	ProductPrice             float64 `json:"productPrice"`
+	ProductPriceCurrency     string  `json:"productPriceCurrency"`
+	ProductDescription       string  `json:"productDescription"`
+	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
+	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
 }
 
 type Order struct {
-	ID                    string  `json:"id"`
-	ProductName           string  `json:"productName"`
-	ProductURL            string  `json:"productUrl"`
-	ProductPrice          float64 `json:"productPrice"`
-	ProductPriceCurrency  string  `json:"productPriceCurrency"`
-	ProductDescription    string  `json:"productDescription"`
-	OrderedByCustomerID   string  `json:"orderedByCustomerId"`
-	OrderedFromBusinessID string  `json:"orderedFromBusinessId"`
+	ID                       string  `json:"id"`
+	ProductName              string  `json:"productName"`
+	ProductURL               string  `json:"productUrl"`
+	ProductPrice             float64 `json:"productPrice"`
+	ProductPriceCurrency     string  `json:"productPriceCurrency"`
+	ProductDescription       string  `json:"productDescription"`
+	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
+	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
 }
 
 type OrderQueryInput struct {
-	BusinessID *string `json:"business_id,omitempty"`
-	CustomerID *string `json:"customer_id,omitempty"`
+	BusinessEmail *string `json:"business_email,omitempty"`
+	CustomerEmail *string `json:"customer_email,omitempty"`
 }
 
 type Query struct {

@@ -40,8 +40,8 @@ type Order {
   productPrice: Float!
   productPriceCurrency: String!
   productDescription: String!
-  orderedByCustomerId: ID!
-  orderedFromBusinessId: ID!
+  orderedByCustomerEmail: ID!
+  orderedFromBusinessEmail: ID!
 }
 
 
@@ -100,8 +100,8 @@ input NewCustomerAccountInput{
 }
 
 input OrderQueryInput{
-  business_id: ID
-  customer_id: ID
+  business_email: ID
+  customer_email: ID
 }
 
 input AccountQueryInput{
@@ -116,6 +116,6 @@ input NewOrderInput{
   productPrice: Float!
   productPriceCurrency: String!
   productDescription: String!
-  orderedByCustomerId: ID!
-  orderedFromBusinessId: ID!
+  orderedByCustomerEmail: ID!
+  orderedFromBusinessEmail: ID!
 }

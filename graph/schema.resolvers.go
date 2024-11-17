@@ -6,14 +6,12 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/siyaramsujan/graphql-api/graph/model"
 )
 
 // CreateBusinessAcount is the resolver for the createBusinessAcount field.
 func (r *mutationResolver) CreateBusinessAccount(ctx context.Context, input model.NewBusinessAccountInput) (*model.BusinessAccount, error) {
-  return r.AccountRoutes.CreateBusinessAccountRoute(ctx, input)
+	return r.AccountRoutes.CreateBusinessAccountRoute(ctx, input)
 }
 
 // CreateCustomerAccount is the resolver for the createCustomerAccount field.
@@ -23,7 +21,7 @@ func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input mode
 
 // CreateOrder is the resolver for the createOrder field.
 func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrderInput) (*model.Order, error) {
-	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
+	return r.OrderRoutes.CreateNewOrderRoute(ctx, input)
 }
 
 // LoginAsCustomer is the resolver for the loginAsCustomer field.
@@ -58,7 +56,7 @@ func (r *queryResolver) GetBusinessAccounts(ctx context.Context) ([]*model.Busin
 
 // GetCustomerAccounts is the resolver for the getCustomerAccounts field.
 func (r *queryResolver) GetCustomerAccounts(ctx context.Context) ([]*model.CustomerAccount, error) {
-  return r.AccountRoutes.GetCustomerAccountsRoute(ctx)
+	return r.AccountRoutes.GetCustomerAccountsRoute(ctx)
 }
 
 // GetCustomersByBusinessID is the resolver for the getCustomersByBusinessId field.
@@ -78,7 +76,7 @@ func (r *queryResolver) GetBusinessByIDOrEmail(ctx context.Context, input model.
 
 // GetOrders is the resolver for the getOrders field.
 func (r *queryResolver) GetOrders(ctx context.Context, input *model.OrderQueryInput) ([]*model.Order, error) {
-	panic(fmt.Errorf("not implemented: GetOrders - getOrders"))
+  return r.OrderRoutes.GetOrdersRoute(ctx, *input)
 }
 
 // Mutation returns MutationResolver implementation.

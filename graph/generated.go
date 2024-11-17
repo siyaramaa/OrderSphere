@@ -94,14 +94,14 @@ type ComplexityRoot struct {
 	}
 
 	Order struct {
-		ID                    func(childComplexity int) int
-		OrderedByCustomerID   func(childComplexity int) int
-		OrderedFromBusinessID func(childComplexity int) int
-		ProductDescription    func(childComplexity int) int
-		ProductName           func(childComplexity int) int
-		ProductPrice          func(childComplexity int) int
-		ProductPriceCurrency  func(childComplexity int) int
-		ProductURL            func(childComplexity int) int
+		ID                       func(childComplexity int) int
+		OrderedByCustomerEmail   func(childComplexity int) int
+		OrderedFromBusinessEmail func(childComplexity int) int
+		ProductDescription       func(childComplexity int) int
+		ProductName              func(childComplexity int) int
+		ProductPrice             func(childComplexity int) int
+		ProductPriceCurrency     func(childComplexity int) int
+		ProductURL               func(childComplexity int) int
 	}
 
 	Query struct {
@@ -416,19 +416,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.ID(childComplexity), true
 
-	case "Order.orderedByCustomerId":
-		if e.complexity.Order.OrderedByCustomerID == nil {
+	case "Order.orderedByCustomerEmail":
+		if e.complexity.Order.OrderedByCustomerEmail == nil {
 			break
 		}
 
-		return e.complexity.Order.OrderedByCustomerID(childComplexity), true
+		return e.complexity.Order.OrderedByCustomerEmail(childComplexity), true
 
-	case "Order.orderedFromBusinessId":
-		if e.complexity.Order.OrderedFromBusinessID == nil {
+	case "Order.orderedFromBusinessEmail":
+		if e.complexity.Order.OrderedFromBusinessEmail == nil {
 			break
 		}
 
-		return e.complexity.Order.OrderedFromBusinessID(childComplexity), true
+		return e.complexity.Order.OrderedFromBusinessEmail(childComplexity), true
 
 	case "Order.productDescription":
 		if e.complexity.Order.ProductDescription == nil {
@@ -2216,10 +2216,10 @@ func (ec *executionContext) fieldContext_Mutation_createOrder(ctx context.Contex
 				return ec.fieldContext_Order_productPriceCurrency(ctx, field)
 			case "productDescription":
 				return ec.fieldContext_Order_productDescription(ctx, field)
-			case "orderedByCustomerId":
-				return ec.fieldContext_Order_orderedByCustomerId(ctx, field)
-			case "orderedFromBusinessId":
-				return ec.fieldContext_Order_orderedFromBusinessId(ctx, field)
+			case "orderedByCustomerEmail":
+				return ec.fieldContext_Order_orderedByCustomerEmail(ctx, field)
+			case "orderedFromBusinessEmail":
+				return ec.fieldContext_Order_orderedFromBusinessEmail(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
@@ -2789,8 +2789,8 @@ func (ec *executionContext) fieldContext_Order_productDescription(_ context.Cont
 	return fc, nil
 }
 
-func (ec *executionContext) _Order_orderedByCustomerId(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Order_orderedByCustomerId(ctx, field)
+func (ec *executionContext) _Order_orderedByCustomerEmail(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Order_orderedByCustomerEmail(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2803,7 +2803,7 @@ func (ec *executionContext) _Order_orderedByCustomerId(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.OrderedByCustomerID, nil
+		return obj.OrderedByCustomerEmail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2820,7 +2820,7 @@ func (ec *executionContext) _Order_orderedByCustomerId(ctx context.Context, fiel
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Order_orderedByCustomerId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Order_orderedByCustomerEmail(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Order",
 		Field:      field,
@@ -2833,8 +2833,8 @@ func (ec *executionContext) fieldContext_Order_orderedByCustomerId(_ context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _Order_orderedFromBusinessId(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Order_orderedFromBusinessId(ctx, field)
+func (ec *executionContext) _Order_orderedFromBusinessEmail(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Order_orderedFromBusinessEmail(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2847,7 +2847,7 @@ func (ec *executionContext) _Order_orderedFromBusinessId(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.OrderedFromBusinessID, nil
+		return obj.OrderedFromBusinessEmail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2864,7 +2864,7 @@ func (ec *executionContext) _Order_orderedFromBusinessId(ctx context.Context, fi
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Order_orderedFromBusinessId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Order_orderedFromBusinessEmail(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Order",
 		Field:      field,
@@ -3261,10 +3261,10 @@ func (ec *executionContext) fieldContext_Query_getOrders(ctx context.Context, fi
 				return ec.fieldContext_Order_productPriceCurrency(ctx, field)
 			case "productDescription":
 				return ec.fieldContext_Order_productDescription(ctx, field)
-			case "orderedByCustomerId":
-				return ec.fieldContext_Order_orderedByCustomerId(ctx, field)
-			case "orderedFromBusinessId":
-				return ec.fieldContext_Order_orderedFromBusinessId(ctx, field)
+			case "orderedByCustomerEmail":
+				return ec.fieldContext_Order_orderedByCustomerEmail(ctx, field)
+			case "orderedFromBusinessEmail":
+				return ec.fieldContext_Order_orderedFromBusinessEmail(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
@@ -5411,7 +5411,7 @@ func (ec *executionContext) unmarshalInputNewOrderInput(ctx context.Context, obj
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerId", "orderedFromBusinessId"}
+	fieldsInOrder := [...]string{"productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerEmail", "orderedFromBusinessEmail"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5453,20 +5453,20 @@ func (ec *executionContext) unmarshalInputNewOrderInput(ctx context.Context, obj
 				return it, err
 			}
 			it.ProductDescription = data
-		case "orderedByCustomerId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderedByCustomerId"))
+		case "orderedByCustomerEmail":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderedByCustomerEmail"))
 			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.OrderedByCustomerID = data
-		case "orderedFromBusinessId":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderedFromBusinessId"))
+			it.OrderedByCustomerEmail = data
+		case "orderedFromBusinessEmail":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderedFromBusinessEmail"))
 			data, err := ec.unmarshalNID2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.OrderedFromBusinessID = data
+			it.OrderedFromBusinessEmail = data
 		}
 	}
 
@@ -5480,27 +5480,27 @@ func (ec *executionContext) unmarshalInputOrderQueryInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"business_id", "customer_id"}
+	fieldsInOrder := [...]string{"business_email", "customer_email"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "business_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("business_id"))
+		case "business_email":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("business_email"))
 			data, err := ec.unmarshalOID2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.BusinessID = data
-		case "customer_id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("customer_id"))
+			it.BusinessEmail = data
+		case "customer_email":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("customer_email"))
 			data, err := ec.unmarshalOID2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.CustomerID = data
+			it.CustomerEmail = data
 		}
 	}
 
@@ -5928,13 +5928,13 @@ func (ec *executionContext) _Order(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "orderedByCustomerId":
-			out.Values[i] = ec._Order_orderedByCustomerId(ctx, field, obj)
+		case "orderedByCustomerEmail":
+			out.Values[i] = ec._Order_orderedByCustomerEmail(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "orderedFromBusinessId":
-			out.Values[i] = ec._Order_orderedFromBusinessId(ctx, field, obj)
+		case "orderedFromBusinessEmail":
+			out.Values[i] = ec._Order_orderedFromBusinessEmail(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
