@@ -88,6 +88,9 @@ type NewOrderInput struct {
 	ProductDescription       string  `json:"productDescription"`
 	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
 	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
+	OrderDeadline            string  `json:"orderDeadline"`
+	OrderPlacedDate          *string `json:"orderPlacedDate,omitempty"`
+	OrderStatus              *string `json:"orderStatus,omitempty"`
 }
 
 type Order struct {
@@ -99,6 +102,9 @@ type Order struct {
 	ProductDescription       string  `json:"productDescription"`
 	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
 	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
+	OrderDeadline            string  `json:"orderDeadline"`
+	OrderPlacedDate          string  `json:"orderPlacedDate"`
+	OrderStatus              *string `json:"orderStatus,omitempty"`
 }
 
 type OrderQueryInput struct {
@@ -107,4 +113,17 @@ type OrderQueryInput struct {
 }
 
 type Query struct {
+}
+
+type UpdateOrderInput struct {
+	ID                     string   `json:"id"`
+	ProductName            *string  `json:"productName,omitempty"`
+	ProductURL             *string  `json:"productUrl,omitempty"`
+	ProductPrice           *float64 `json:"productPrice,omitempty"`
+	ProductPriceCurrency   *string  `json:"productPriceCurrency,omitempty"`
+	ProductDescription     *string  `json:"productDescription,omitempty"`
+	OrderedByCustomerEmail *string  `json:"orderedByCustomerEmail,omitempty"`
+	OrderDeadline          *string  `json:"orderDeadline,omitempty"`
+	OrderPlacedDate        *string  `json:"orderPlacedDate,omitempty"`
+	OrderStatus            *string  `json:"orderStatus,omitempty"`
 }

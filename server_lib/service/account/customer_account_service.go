@@ -156,7 +156,7 @@ func (Service *AccountService) GetCustomerByIdOrEmail(input model.AccountQueryIn
 func (Service *AccountService) LoginAsCustomer(input model.LoginDetailsInput) (*model.LoginResponse, error){
    
   accountDetail, err := Service.GetCustomerByIdOrEmail(model.AccountQueryInput{AccountEmail: &input.AccountEmail})
-   
+
   if err != nil{
     return nil, err
   }

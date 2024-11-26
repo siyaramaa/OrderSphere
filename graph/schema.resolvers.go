@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/siyaramsujan/graphql-api/graph/model"
 )
 
@@ -14,29 +15,14 @@ func (r *mutationResolver) CreateBusinessAccount(ctx context.Context, input mode
 	return r.AccountRoutes.CreateBusinessAccountRoute(ctx, input)
 }
 
-// CreateCustomerAccount is the resolver for the createCustomerAccount field.
-func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error) {
-	return r.AccountRoutes.CreateCustomerAccountRoute(ctx, input)
-}
-
-// CreateOrder is the resolver for the createOrder field.
-func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrderInput) (*model.Order, error) {
-	return r.OrderRoutes.CreateNewOrderRoute(ctx, input)
-}
-
-// LoginAsCustomer is the resolver for the loginAsCustomer field.
-func (r *mutationResolver) LoginAsCustomer(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error) {
-	return r.AccountRoutes.LoginAsCustomerRoute(ctx, input)
-}
-
 // LoginAsBusiness is the resolver for the loginAsBusiness field.
 func (r *mutationResolver) LoginAsBusiness(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error) {
 	return r.AccountRoutes.LoginAsBusinessRoute(ctx, input)
 }
 
-// DeleteCustomerAccount is the resolver for the deleteCustomerAccount field.
-func (r *mutationResolver) DeleteCustomerAccount(ctx context.Context, input model.LoginDetailsInput) (string, error) {
-	return r.AccountRoutes.DeleteCustomerAccountRoute(ctx, input)
+// CreateOrder is the resolver for the createOrder field.
+func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrderInput) (*model.Order, error) {
+	return r.OrderRoutes.CreateNewOrderRoute(ctx, input)
 }
 
 // DeleteBusinessAccount is the resolver for the deleteBusinessAccount field.
@@ -47,6 +33,26 @@ func (r *mutationResolver) DeleteBusinessAccount(ctx context.Context, input mode
 // LinkAccountToBusiness is the resolver for the linkAccountToBusiness field.
 func (r *mutationResolver) LinkAccountToBusiness(ctx context.Context, input *model.LinkAccountToBusinessInput) (string, error) {
 	return r.AccountRoutes.LinkAccountToBusinessRoute(ctx, input)
+}
+
+// UpdateOrder is the resolver for the updateOrder field.
+func (r *mutationResolver) UpdateOrder(ctx context.Context, input model.UpdateOrderInput) (*model.Order, error) {
+	return r.OrderRoutes.UpdateOrderRoute(ctx, input)
+}
+
+// CreateCustomerAccount is the resolver for the createCustomerAccount field.
+func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error) {
+	return r.AccountRoutes.CreateCustomerAccountRoute(ctx, input)
+}
+
+// LoginAsCustomer is the resolver for the loginAsCustomer field.
+func (r *mutationResolver) LoginAsCustomer(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error) {
+	return r.AccountRoutes.LoginAsCustomerRoute(ctx, input)
+}
+
+// DeleteCustomerAccount is the resolver for the deleteCustomerAccount field.
+func (r *mutationResolver) DeleteCustomerAccount(ctx context.Context, input model.LoginDetailsInput) (string, error) {
+	return r.AccountRoutes.DeleteCustomerAccountRoute(ctx, input)
 }
 
 // GetBusinessAccounts is the resolver for the getBusinessAccounts field.
@@ -76,7 +82,7 @@ func (r *queryResolver) GetBusinessByIDOrEmail(ctx context.Context, input model.
 
 // GetOrders is the resolver for the getOrders field.
 func (r *queryResolver) GetOrders(ctx context.Context, input *model.OrderQueryInput) ([]*model.Order, error) {
-  return r.OrderRoutes.GetOrdersRoute(ctx, *input)
+	return r.OrderRoutes.GetOrdersRoute(ctx, *input)
 }
 
 // Mutation returns MutationResolver implementation.

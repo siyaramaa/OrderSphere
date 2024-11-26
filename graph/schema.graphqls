@@ -42,6 +42,9 @@ type Order {
   productDescription: String!
   orderedByCustomerEmail: ID!
   orderedFromBusinessEmail: ID!
+  orderDeadline: String!
+  orderPlacedDate: String!
+  orderStatus: String
 }
 
 
@@ -62,14 +65,18 @@ type Query {
 }
 
 type Mutation {
+  # Business - business can write and read data 
   createBusinessAccount(input: NewBusinessAccountInput!): BusinessAccount!
-  createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
-  createOrder(input: NewOrderInput!): Order!
-  loginAsCustomer(input: LoginDetailsInput!): LoginResponse!
   loginAsBusiness(input: LoginDetailsInput!): LoginResponse!
-  deleteCustomerAccount(input: LoginDetailsInput!): String!
+  createOrder(input: NewOrderInput!): Order! 
   deleteBusinessAccount(input: LoginDetailsInput!): String!
   linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
+  updateOrder(input: UpdateOrderInput!): Order!
+
+  # Customer - customer can only read data
+  createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
+  loginAsCustomer(input: LoginDetailsInput!): LoginResponse!
+  deleteCustomerAccount(input: LoginDetailsInput!): String!
 }
 
 input LinkAccountToBusinessInput{
@@ -118,4 +125,21 @@ input NewOrderInput{
   productDescription: String!
   orderedByCustomerEmail: ID!
   orderedFromBusinessEmail: ID!
+  orderDeadline: String!
+  orderPlacedDate: String
+  orderStatus: String
+}
+
+
+input UpdateOrderInput{
+  id: ID!
+  productName: String
+  productUrl: String
+  productPrice: Float
+  productPriceCurrency: String
+  productDescription: String
+  orderedByCustomerEmail: ID
+  orderDeadline: String
+  orderPlacedDate: String
+  orderStatus: String
 }

@@ -15,3 +15,7 @@ func (r *OrderRoutes) CreateNewOrderRoute(ctx context.Context,input model.NewOrd
 func (r *OrderRoutes) GetOrdersRoute(ctx context.Context, input model.OrderQueryInput) ([]*model.Order, error) {
   return r.Service.GetOrders(input)
 }
+
+func (r *OrderRoutes) UpdateOrderRoute(ctx context.Context, input model.UpdateOrderInput) (*model.Order, error) {
+   return r.Service.UpdateOrder(input)
+}

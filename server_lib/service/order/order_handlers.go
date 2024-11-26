@@ -2,6 +2,7 @@ package order
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/siyaramsujan/graphql-api/graph/model"
@@ -18,6 +19,17 @@ func (Service *OrderService) CreateNewOrder(input model.NewOrderInput)(createdOr
                return nil, err
       }
       
+      var orderPlacedDate string = time.Now().String()
+      var orderStatus string = "pending"
+
+      if(input.OrderStatus != nil){
+           orderStatus = *input.OrderStatus
+       }
+
+      if(input.OrderPlacedDate != nil){
+           orderPlacedDate = *input.OrderPlacedDate
+      }
+
       newOrderId, _ := uuid.NewUUID()
       
       newOrder := model.Order{
@@ -29,7 +41,11 @@ func (Service *OrderService) CreateNewOrder(input model.NewOrderInput)(createdOr
           ProductPrice: input.ProductPrice,
           ProductDescription: input.ProductDescription,
           ProductPriceCurrency: input.ProductPriceCurrency,
+          OrderPlacedDate: orderPlacedDate,
+          OrderDeadline: input.OrderDeadline,
+          OrderStatus: &orderStatus,          
       }
+
 
       tx := Service.DB.Create(&newOrder)
       
@@ -91,4 +107,26 @@ func (Service *OrderService) GetOrders(input model.OrderQueryInput) ([]*model.Or
     return orders, nil
 }
 
+
+
+func (Service *OrderService) UpdateOrder(input model.UpdateOrderInput) (*model.Order, error) {
+        
+        var order model.Order
+
+        result := Service.DB.Model(&order).Where("id = ?", input.ID).Updates(input)
+
+        if result.Error != nil {
+          return nil, result.Error
+        }
+
+        if result.RowsAffected == 0 {
+            return nil, fmt.Errorf("no orders found for the given query")
+        }
+
+        if err := Service.DB.First(&order, "id = ?", input.ID).Error; err != nil {
+           return nil, err
+        }
+     
+        return &order, nil    
+}
 
