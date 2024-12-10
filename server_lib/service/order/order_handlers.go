@@ -15,35 +15,40 @@ func (Service *OrderService) CreateNewOrder(input model.NewOrderInput)(createdOr
 
       accountService := account.NewAccountService(Service.DB)
      
-      if _, err := accountService.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountEmail: &input.OrderedFromBusinessEmail}); err != nil{
+      if _, err := accountService.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountID: &input.BusinessID}); err != nil{
                return nil, err
       }
-      
-      var orderPlacedDate string = time.Now().String()
-      var orderStatus string = "pending"
+     
+      var orderPlacedDate string = time.Now().Format(time.RFC3339)
+      var orderStatus string = model.OrderStatusTypesPending.String() 
+      var productUrl string
 
       if(input.OrderStatus != nil){
-           orderStatus = *input.OrderStatus
+           orderStatus = input.OrderStatus.String()
        }
 
       if(input.OrderPlacedDate != nil){
            orderPlacedDate = *input.OrderPlacedDate
       }
 
+      if(input.ProductURL != nil){
+             productUrl = *input.ProductURL
+      }  
+
       newOrderId, _ := uuid.NewUUID()
       
       newOrder := model.Order{
           ID: newOrderId.String(),
           ProductName: input.ProductName,
-          ProductURL: input.ProductURL,
-          OrderedFromBusinessEmail: input.OrderedFromBusinessEmail,
+          ProductURL: productUrl,
+          BusinessID: input.BusinessID,
           OrderedByCustomerEmail: input.OrderedByCustomerEmail,
           ProductPrice: input.ProductPrice,
           ProductDescription: input.ProductDescription,
           ProductPriceCurrency: input.ProductPriceCurrency,
           OrderPlacedDate: orderPlacedDate,
           OrderDeadline: input.OrderDeadline,
-          OrderStatus: &orderStatus,          
+          OrderStatus: orderStatus,
       }
 
 
@@ -61,39 +66,41 @@ func (Service *OrderService) CreateNewOrder(input model.NewOrderInput)(createdOr
 
 func (Service *OrderService) GetOrders(input model.OrderQueryInput) ([]*model.Order, error) {
     // Safely handle input pointers
-    var businessEmail, customerEmail string
-    if input.BusinessEmail != nil {
-        businessEmail = *input.BusinessEmail
+    var businessId, customerEmail string
+    if input.BusinessID != nil {
+        businessId = *input.BusinessID
     }
+
+
     if input.CustomerEmail != nil {
         customerEmail = *input.CustomerEmail
     }
 
     // Validate inputs
-    if businessEmail == "" && customerEmail == "" {
-        return nil, fmt.Errorf("either BusinessEmail or CustomerEmail must be provided")
+    if businessId == "" && customerEmail == "" {
+        return nil, fmt.Errorf("either BusinessID or CustomerEmail must be provided")
     }
 
     var orders []*model.Order
     var result *gorm.DB
 
     // Business email provided
-    if businessEmail != "" && customerEmail == "" {
+    if businessId != "" && customerEmail == "" {
         accountService := account.NewAccountService(Service.DB)
-        if _, err := accountService.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountEmail: &businessEmail}); err != nil {
+        if _, err := accountService.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountID: &businessId}); err != nil {
             return nil, err
         }
-        result = Service.DB.Where("ordered_from_business_email = ?", businessEmail).Find(&orders)
+        result = Service.DB.Where("business_id = ?", businessId).Find(&orders)
     }
 
     // Customer email provided
-    if businessEmail == "" && customerEmail != "" {
+    if businessId == "" && customerEmail != "" {
         result = Service.DB.Where("ordered_by_customer_email = ?", customerEmail).Find(&orders)
     }
 
     // Both emails provided
-    if businessEmail != "" && customerEmail != "" {
-        result = Service.DB.Where("ordered_from_business_email = ? AND ordered_by_customer_email = ?", businessEmail, customerEmail).Find(&orders)
+    if businessId != "" && customerEmail != "" {
+        result = Service.DB.Where("business_id = ? AND ordered_by_customer_email = ?", businessId, customerEmail).Find(&orders)
     }
 
     // Handle database errors

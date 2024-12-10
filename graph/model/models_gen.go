@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type LoginAccountDetails interface {
 	IsLoginAccountDetails()
 }
@@ -24,13 +30,10 @@ type BusinessAccount struct {
 func (BusinessAccount) IsLoginAccountDetails() {}
 
 type BusinessCustomer struct {
-	ID                     string `json:"id"`
-	BusinessAccountID      string `json:"businessAccountId"`
-	CustomerAccountID      string `json:"customerAccountId"`
-	CustomerAccountName    string `json:"customerAccountName"`
-	CustomerAccountEmail   string `json:"customerAccountEmail"`
-	CustomerAccountAddress string `json:"customerAccountAddress"`
-	CustomerJoinedDate     string `json:"customerJoinedDate"`
+	ID                string `json:"id"`
+	BusinessAccountID string `json:"businessAccountId"`
+	CustomerAccountID string `json:"customerAccountId"`
+	JoinedDate        string `json:"joinedDate"`
 }
 
 type CustomerAccount struct {
@@ -46,8 +49,8 @@ type CustomerAccount struct {
 func (CustomerAccount) IsLoginAccountDetails() {}
 
 type LinkAccountToBusinessInput struct {
-	BusinessEmail string `json:"business_email"`
-	CustomerEmail string `json:"customer_email"`
+	BusinessID string `json:"business_id"`
+	CustomerID string `json:"customer_id"`
 }
 
 type LoginDetailsInput struct {
@@ -72,43 +75,43 @@ type NewBusinessAccountInput struct {
 }
 
 type NewCustomerAccountInput struct {
-	AccountName       string `json:"accountName"`
-	AccountEmail      string `json:"accountEmail"`
-	AccountPassword   string `json:"accountPassword"`
-	AccountContact    string `json:"accountContact"`
-	AccountAddress    string `json:"accountAddress"`
-	BusinessAccountID string `json:"businessAccountId"`
+	AccountName       string  `json:"accountName"`
+	AccountEmail      string  `json:"accountEmail"`
+	AccountPassword   string  `json:"accountPassword"`
+	AccountContact    string  `json:"accountContact"`
+	AccountAddress    string  `json:"accountAddress"`
+	BusinessAccountID *string `json:"businessAccountId,omitempty"`
 }
 
 type NewOrderInput struct {
-	ProductName              string  `json:"productName"`
-	ProductURL               string  `json:"productUrl"`
-	ProductPrice             float64 `json:"productPrice"`
-	ProductPriceCurrency     string  `json:"productPriceCurrency"`
-	ProductDescription       string  `json:"productDescription"`
-	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
-	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
-	OrderDeadline            string  `json:"orderDeadline"`
-	OrderPlacedDate          *string `json:"orderPlacedDate,omitempty"`
-	OrderStatus              *string `json:"orderStatus,omitempty"`
+	ProductName            string            `json:"productName"`
+	ProductURL             *string           `json:"productUrl,omitempty"`
+	ProductPrice           float64           `json:"productPrice"`
+	ProductPriceCurrency   string            `json:"productPriceCurrency"`
+	ProductDescription     string            `json:"productDescription"`
+	OrderedByCustomerEmail string            `json:"orderedByCustomerEmail"`
+	BusinessID             string            `json:"business_id"`
+	OrderDeadline          string            `json:"orderDeadline"`
+	OrderPlacedDate        *string           `json:"orderPlacedDate,omitempty"`
+	OrderStatus            *OrderStatusTypes `json:"orderStatus,omitempty"`
 }
 
 type Order struct {
-	ID                       string  `json:"id"`
-	ProductName              string  `json:"productName"`
-	ProductURL               string  `json:"productUrl"`
-	ProductPrice             float64 `json:"productPrice"`
-	ProductPriceCurrency     string  `json:"productPriceCurrency"`
-	ProductDescription       string  `json:"productDescription"`
-	OrderedByCustomerEmail   string  `json:"orderedByCustomerEmail"`
-	OrderedFromBusinessEmail string  `json:"orderedFromBusinessEmail"`
-	OrderDeadline            string  `json:"orderDeadline"`
-	OrderPlacedDate          string  `json:"orderPlacedDate"`
-	OrderStatus              *string `json:"orderStatus,omitempty"`
+	ID                     string  `json:"id"`
+	ProductName            string  `json:"productName"`
+	ProductURL             string  `json:"productUrl"`
+	ProductPrice           float64 `json:"productPrice"`
+	ProductPriceCurrency   string  `json:"productPriceCurrency"`
+	ProductDescription     string  `json:"productDescription"`
+	OrderedByCustomerEmail string  `json:"orderedByCustomerEmail"`
+	BusinessID             string  `json:"business_id"`
+	OrderDeadline          string  `json:"orderDeadline"`
+	OrderPlacedDate        string  `json:"orderPlacedDate"`
+	OrderStatus            string  `json:"orderStatus"`
 }
 
 type OrderQueryInput struct {
-	BusinessEmail *string `json:"business_email,omitempty"`
+	BusinessID    *string `json:"business_id,omitempty"`
 	CustomerEmail *string `json:"customer_email,omitempty"`
 }
 
@@ -116,14 +119,59 @@ type Query struct {
 }
 
 type UpdateOrderInput struct {
-	ID                     string   `json:"id"`
-	ProductName            *string  `json:"productName,omitempty"`
-	ProductURL             *string  `json:"productUrl,omitempty"`
-	ProductPrice           *float64 `json:"productPrice,omitempty"`
-	ProductPriceCurrency   *string  `json:"productPriceCurrency,omitempty"`
-	ProductDescription     *string  `json:"productDescription,omitempty"`
-	OrderedByCustomerEmail *string  `json:"orderedByCustomerEmail,omitempty"`
-	OrderDeadline          *string  `json:"orderDeadline,omitempty"`
-	OrderPlacedDate        *string  `json:"orderPlacedDate,omitempty"`
-	OrderStatus            *string  `json:"orderStatus,omitempty"`
+	ID                     string            `json:"id"`
+	ProductName            *string           `json:"productName,omitempty"`
+	ProductURL             *string           `json:"productUrl,omitempty"`
+	ProductPrice           *float64          `json:"productPrice,omitempty"`
+	ProductPriceCurrency   *string           `json:"productPriceCurrency,omitempty"`
+	ProductDescription     *string           `json:"productDescription,omitempty"`
+	OrderedByCustomerEmail *string           `json:"orderedByCustomerEmail,omitempty"`
+	OrderDeadline          *string           `json:"orderDeadline,omitempty"`
+	OrderPlacedDate        *string           `json:"orderPlacedDate,omitempty"`
+	OrderStatus            *OrderStatusTypes `json:"orderStatus,omitempty"`
+}
+
+type OrderStatusTypes string
+
+const (
+	OrderStatusTypesPending          OrderStatusTypes = "PENDING"
+	OrderStatusTypesReadyToBeShipped OrderStatusTypes = "READY_TO_BE_SHIPPED"
+	OrderStatusTypesShipped          OrderStatusTypes = "SHIPPED"
+	OrderStatusTypesDelivered        OrderStatusTypes = "DELIVERED"
+)
+
+var AllOrderStatusTypes = []OrderStatusTypes{
+	OrderStatusTypesPending,
+	OrderStatusTypesReadyToBeShipped,
+	OrderStatusTypesShipped,
+	OrderStatusTypesDelivered,
+}
+
+func (e OrderStatusTypes) IsValid() bool {
+	switch e {
+	case OrderStatusTypesPending, OrderStatusTypesReadyToBeShipped, OrderStatusTypesShipped, OrderStatusTypesDelivered:
+		return true
+	}
+	return false
+}
+
+func (e OrderStatusTypes) String() string {
+	return string(e)
+}
+
+func (e *OrderStatusTypes) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OrderStatusTypes(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OrderStatusTypes", str)
+	}
+	return nil
+}
+
+func (e OrderStatusTypes) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

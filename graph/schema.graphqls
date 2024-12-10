@@ -16,10 +16,7 @@ type BusinessCustomer {
   id: ID!
   businessAccountId: ID!
   customerAccountId: ID!
-  customerAccountName: String!
-  customerAccountEmail: String!
-  customerAccountAddress: String!
-  customerJoinedDate: String!
+  joinedDate: String!
 }
 
 
@@ -41,12 +38,11 @@ type Order {
   productPriceCurrency: String!
   productDescription: String!
   orderedByCustomerEmail: ID!
-  orderedFromBusinessEmail: ID!
+  business_id: ID!
   orderDeadline: String!
   orderPlacedDate: String!
-  orderStatus: String
+  orderStatus: String!
 }
-
 
 union LoginAccountDetails = CustomerAccount | BusinessAccount 
 
@@ -80,8 +76,8 @@ type Mutation {
 }
 
 input LinkAccountToBusinessInput{
-     business_email: String!
-     customer_email: String!
+     business_id: String!
+     customer_id: String!
 }
 
 input LoginDetailsInput{
@@ -103,12 +99,12 @@ input NewCustomerAccountInput{
   accountPassword: String!
   accountContact: String!
   accountAddress: String!
-  businessAccountId: String! 
+  businessAccountId: String
 }
 
 input OrderQueryInput{
-  business_email: ID
-  customer_email: ID
+  business_id: String 
+  customer_email: String 
 }
 
 input AccountQueryInput{
@@ -116,20 +112,25 @@ input AccountQueryInput{
   account_email: String 
 }
 
+enum OrderStatusTypes {
+    PENDING
+    READY_TO_BE_SHIPPED
+    SHIPPED
+    DELIVERED
+}
 
 input NewOrderInput{
   productName: String!
-  productUrl: String!
+  productUrl: String
   productPrice: Float!
   productPriceCurrency: String!
   productDescription: String!
   orderedByCustomerEmail: ID!
-  orderedFromBusinessEmail: ID!
+  business_id: ID!
   orderDeadline: String!
   orderPlacedDate: String
-  orderStatus: String
+  orderStatus: OrderStatusTypes
 }
-
 
 input UpdateOrderInput{
   id: ID!
@@ -141,5 +142,5 @@ input UpdateOrderInput{
   orderedByCustomerEmail: ID
   orderDeadline: String
   orderPlacedDate: String
-  orderStatus: String
+  orderStatus: OrderStatusTypes
 }

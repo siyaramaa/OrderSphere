@@ -12,15 +12,16 @@ import (
 
 
 func (Service *AccountService) CreateCustomerAccount(user model.NewCustomerAccountInput) (createdBusiness *model.CustomerAccount, err error){ 
-
-     var userExists model.CustomerAccount
-
-     if Service.DB.Where("account_email = ?", user.AccountEmail).First(&userExists).Error == nil{
-          return nil, fmt.Errorf("User with email: '%s' already exists.", user.AccountEmail) 
+    
+     // Check if user with email already exists
+     if _, err := Service.GetCustomerByIdOrEmail(model.AccountQueryInput{AccountEmail: &user.AccountEmail}); err == nil{
+          return nil, fmt.Errorf("Email '%s' is already used.", user.AccountEmail) 
      }
 
+     // Generate new id for user
      newUserId, _ := uuid.NewUUID()
 
+     // hash user's password
      hashedPassword, err := utils.HashPassword(user.AccountPassword)
 
      if err != nil{
@@ -37,33 +38,17 @@ func (Service *AccountService) CreateCustomerAccount(user model.NewCustomerAccou
       CreatedAt: time.Now().String(),
      }
 
+    // Store user data to the DB
     tx := Service.DB.Create(&newUser) 
 
     if tx.RowsAffected == 0{
           return nil, fmt.Errorf("Failed to create new Customer account, please try again later.")
     }
-
-    if user.BusinessAccountID != ""{
-      
-    if _, err := Service.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountID: &user.BusinessAccountID}); err != nil{
-        return nil, err
-    }
-
-       newBusinessCustomerId, _ := uuid.NewUUID()
-       newBusinessCustomer := model.BusinessCustomer{
-         ID: newBusinessCustomerId.String(),
-         CustomerAccountID: newUser.ID,
-         BusinessAccountID: user.BusinessAccountID,
-         CustomerJoinedDate: time.Now().String(),
-         CustomerAccountEmail: user.AccountEmail,
-         CustomerAccountName: user.AccountName,
-         CustomerAccountAddress: user.AccountAddress,
-       }
-
-      tx := Service.DB.Create(&newBusinessCustomer) 
-
-      if tx.RowsAffected == 0{
-            return nil, fmt.Errorf("Failed to create new business customer account, please try again later.")
+  
+    // if businessId is provided in body then link the user with the business
+    if user.BusinessAccountID != nil{
+      if _, err := Service.LinkAccountToBusiness(model.LinkAccountToBusinessInput{BusinessID: *user.BusinessAccountID, CustomerID: newUser.ID }); err != nil{
+         return nil, err
       }
     }
     
@@ -73,14 +58,13 @@ func (Service *AccountService) CreateCustomerAccount(user model.NewCustomerAccou
 func (Service *AccountService) LinkAccountToBusiness(input model.LinkAccountToBusinessInput) (string, error){ 
 
     
-     var customer model.CustomerAccount
-
-     if Service.DB.Where("account_email = ?", input.CustomerEmail).First(&customer).Error != nil{
-          return "", fmt.Errorf("User with email: '%s' doesn't exists.", input.CustomerEmail) 
+     customer, err := Service.GetCustomerByIdOrEmail(model.AccountQueryInput{AccountID: &input.CustomerID}); 
+     
+     if err != nil{
+          return "", err 
      }
-
-      
-     business, err := Service.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountEmail: &input.BusinessEmail})
+ 
+     business, err := Service.GetBusinessByIdOrEmail(model.AccountQueryInput{AccountID: &input.BusinessID})
 
      if err != nil{
         return "", err
@@ -91,18 +75,13 @@ func (Service *AccountService) LinkAccountToBusiness(input model.LinkAccountToBu
          return "", fmt.Errorf("%s is already linked as customer of %s", customer.AccountName, business.AccountName)
      }
 
-    
-
-       newBusinessCustomerId, _ := uuid.NewUUID()
-       newBusinessCustomer := model.BusinessCustomer{
-         ID: newBusinessCustomerId.String(),
-         CustomerAccountID: customer.ID,
-         BusinessAccountID: business.ID,
-         CustomerJoinedDate: time.Now().String(),
-         CustomerAccountEmail: customer.AccountEmail,
-         CustomerAccountName: customer.AccountName,
-         CustomerAccountAddress: customer.AccountAddress,
-       }
+     newBusinessCustomerId, _ := uuid.NewUUID()
+     newBusinessCustomer := model.BusinessCustomer{
+       ID: newBusinessCustomerId.String(),
+       CustomerAccountID: customer.ID,
+       BusinessAccountID: business.ID,
+       JoinedDate: time.Now().String(),
+     }
 
       tx := Service.DB.Create(&newBusinessCustomer) 
 
@@ -127,16 +106,28 @@ func (Service *AccountService) GetListOfCustomerAccounts() ([]*model.CustomerAcc
 
 func (Service *AccountService) GetCustomerByIdOrEmail(input model.AccountQueryInput) (*model.CustomerAccount, error){ 
 
+    var accountId string
+    var accountEmail string
     var CustomerAccount model.CustomerAccount
   
     var result *gorm.DB
-
+    
     if input.AccountID != nil{
-        result = Service.DB.Where("id = ?", *input.AccountID).Find(&CustomerAccount)
-    }else if input.AccountEmail != nil{
-        result = Service.DB.Where("account_email = ?", *input.AccountEmail).Find(&CustomerAccount)
-    }else{
-      return nil, fmt.Errorf("Either Account Email or ID should be passed to query input.")
+           accountId = *input.AccountID
+    }
+    
+    if input.AccountEmail != nil{
+           accountEmail = *input.AccountEmail
+    }
+      
+    if(accountId == "" && accountEmail == ""){
+     return nil, fmt.Errorf("Either Account Email or ID should be passed to query input.")
+    } 
+
+    if accountId != ""{
+        result = Service.DB.Where("id = ?", accountId).Find(&CustomerAccount)
+    }else if accountEmail != ""{
+        result = Service.DB.Where("account_email = ?", accountEmail).Find(&CustomerAccount)
     }
     
     if result.Error != nil{
