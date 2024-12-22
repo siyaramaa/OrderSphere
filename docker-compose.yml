@@ -28,6 +28,8 @@ services:
       POSTGRES_PASSWORD: harekrishna 
       POSTGRES_DB: apitest
     restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "3010:5432"
     networks:
@@ -36,3 +38,6 @@ services:
 networks:
   fullstack:
     driver: bridge
+
+volumes:
+  postgres_data:

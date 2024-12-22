@@ -137,3 +137,17 @@ func (Service *OrderService) UpdateOrder(input model.UpdateOrderInput) (*model.O
         return &order, nil    
 }
 
+func (Service *OrderService) DeleteOrder(orderID string) (string, error) {
+        
+        result := Service.DB.Where("id = ?", orderID).Delete(&model.Order{})
+        
+        if result.Error != nil {
+          return "", result.Error
+        }
+
+        if result.RowsAffected == 0 {
+            return "", fmt.Errorf("Couldn't delete any order with the given ID")
+        }
+ 
+        return "Order deleted successfully", nil    
+}

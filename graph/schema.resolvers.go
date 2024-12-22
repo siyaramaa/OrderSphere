@@ -40,6 +40,11 @@ func (r *mutationResolver) UpdateOrder(ctx context.Context, input model.UpdateOr
 	return r.OrderRoutes.UpdateOrderRoute(ctx, input)
 }
 
+// DeleteOrder is the resolver for the deleteOrder field.
+func (r *mutationResolver) DeleteOrder(ctx context.Context, orderID string) (string, error) {
+	return r.OrderRoutes.DeleteOrder(ctx, orderID)
+}
+
 // CreateCustomerAccount is the resolver for the createCustomerAccount field.
 func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error) {
 	return r.AccountRoutes.CreateCustomerAccountRoute(ctx, input)

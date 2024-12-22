@@ -68,6 +68,7 @@ type Mutation {
   deleteBusinessAccount(input: LoginDetailsInput!): String!
   linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
   updateOrder(input: UpdateOrderInput!): Order!
+  deleteOrder(order_id: ID!): String!
 
   # Customer - customer can only read data
   createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!

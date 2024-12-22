@@ -19,3 +19,7 @@ func (r *OrderRoutes) GetOrdersRoute(ctx context.Context, input model.OrderQuery
 func (r *OrderRoutes) UpdateOrderRoute(ctx context.Context, input model.UpdateOrderInput) (*model.Order, error) {
    return r.Service.UpdateOrder(input)
 }
+
+func (r *OrderRoutes) DeleteOrder(ctx context.Context, orderID string) (string, error){
+   return r.Service.DeleteOrder(orderID)
+}
