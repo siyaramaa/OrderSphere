@@ -36,6 +36,18 @@ type BusinessCustomer struct {
 	JoinedDate        string `json:"joinedDate"`
 }
 
+type CustomOrderSchema struct {
+	ID         string               `json:"id"`
+	BusinessID string               `json:"business_id"`
+	Fields     []*CustomSchemaInput `json:"fields,omitempty"`
+}
+
+type CustomSchemaInput struct {
+	FieldName  string `json:"fieldName"`
+	FieldType  string `json:"fieldType"`
+	IsRequired bool   `json:"isRequired"`
+}
+
 type CustomerAccount struct {
 	ID              string `json:"id"`
 	AccountName     string `json:"accountName"`
@@ -94,20 +106,22 @@ type NewOrderInput struct {
 	OrderDeadline          string            `json:"orderDeadline"`
 	OrderPlacedDate        *string           `json:"orderPlacedDate,omitempty"`
 	OrderStatus            *OrderStatusTypes `json:"orderStatus,omitempty"`
+	CustomFieldsData       CustomFieldJSON   `json:"CustomFieldsData,omitempty" gorm:"type:jsonb"`
 }
 
 type Order struct {
-	ID                     string  `json:"id"`
-	ProductName            string  `json:"productName"`
-	ProductURL             string  `json:"productUrl"`
-	ProductPrice           float64 `json:"productPrice"`
-	ProductPriceCurrency   string  `json:"productPriceCurrency"`
-	ProductDescription     string  `json:"productDescription"`
-	OrderedByCustomerEmail string  `json:"orderedByCustomerEmail"`
-	BusinessID             string  `json:"business_id"`
-	OrderDeadline          string  `json:"orderDeadline"`
-	OrderPlacedDate        string  `json:"orderPlacedDate"`
-	OrderStatus            string  `json:"orderStatus"`
+	ID                     string          `json:"id"`
+	ProductName            string          `json:"productName"`
+	ProductURL             string          `json:"productUrl"`
+	ProductPrice           float64         `json:"productPrice"`
+	ProductPriceCurrency   string          `json:"productPriceCurrency"`
+	ProductDescription     string          `json:"productDescription"`
+	OrderedByCustomerEmail string          `json:"orderedByCustomerEmail"`
+	BusinessID             string          `json:"business_id"`
+	OrderDeadline          string          `json:"orderDeadline"`
+	OrderPlacedDate        string          `json:"orderPlacedDate"`
+	OrderStatus            string          `json:"orderStatus"`
+	CustomFieldsData       CustomFieldJSON `json:"CustomFieldsData,omitempty" gorm:"type:jsonb"`
 }
 
 type OrderQueryInput struct {
@@ -129,6 +143,7 @@ type UpdateOrderInput struct {
 	OrderDeadline          *string           `json:"orderDeadline,omitempty"`
 	OrderPlacedDate        *string           `json:"orderPlacedDate,omitempty"`
 	OrderStatus            *OrderStatusTypes `json:"orderStatus,omitempty"`
+	CustomFieldsData       CustomFieldJSON   `json:"CustomFieldsData,omitempty" gorm:"type:jsonb"`
 }
 
 type OrderStatusTypes string

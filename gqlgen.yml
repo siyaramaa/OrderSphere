@@ -95,3 +95,22 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+  Map:
+    model: github.com/99designs/gqlgen/graphql.Map
+  CustomFieldsDataType:
+    model: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldJSON
+  # Order:
+  #   fields:
+  #    CustomFieldsData:
+  #      type: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldJSON
+  #      overrideTags: 'json:"custom_fields_data,omitempty" gorm:"type:jsonb"'
+  # NewOrderInput:
+  #   fields:
+  #    CustomFieldsData:
+  #      type: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldJSON
+  #      overrideTags: 'json:"custom_fields_data,omitempty" gorm:"type:jsonb"'
+  # UpdateOrderInput:
+  #   fields:
+  #    CustomFieldsData:
+  #      type: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldJSON
+  #      overrideTags: 'json:"custom_fields_data,omitempty" gorm:"type:jsonb"'

@@ -49,6 +49,7 @@ func (Service *OrderService) CreateNewOrder(input model.NewOrderInput)(createdOr
           OrderPlacedDate: orderPlacedDate,
           OrderDeadline: input.OrderDeadline,
           OrderStatus: orderStatus,
+          CustomFieldsData: input.CustomFieldsData,
       }
 
 

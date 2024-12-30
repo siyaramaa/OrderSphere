@@ -1,147 +1,194 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+scalar Map
+scalar CustomFieldsDataType
+# GraphQL schema for OrderSphere
+# This schema supports managing business accounts, customer accounts, and orders.
 
+# ------------------------ Business Schemas ------------------------
+
+# Type definition for a business account.
 type BusinessAccount {
-  id: ID! 
-  accountName: String!
-  accountEmail: String!
-  accountPassword: String!
-  accountContact: String!
-  accountAddress: String!
-  createdAt: String!
+  id: ID!                        # Unique identifier for the business account
+  accountName: String!           # Name of the business
+  accountEmail: String!          # Email associated with the business account
+  accountPassword: String!       # Password for authentication
+  accountContact: String!        # Contact number of the business
+  accountAddress: String!        # Address of the business
+  createdAt: String!             # Timestamp of account creation
 }
 
+# Type definition for linking a business and its customers.
 type BusinessCustomer {
-  id: ID!
-  businessAccountId: ID!
-  customerAccountId: ID!
-  joinedDate: String!
+  id: ID!                        # Unique identifier for the business-customer relationship
+  businessAccountId: ID!         # ID of the associated business
+  customerAccountId: ID!         # ID of the linked customer account
+  joinedDate: String!            # Date when the customer joined the business
 }
 
+# Input type for creating a new business account.
+input NewBusinessAccountInput {
+  accountName: String!           # Name of the business
+  accountEmail: String!          # Email for the account
+  accountPassword: String!       # Password for authentication
+  accountContact: String!        # Contact number
+  accountAddress: String!        # Address of the business
+}
 
+# ----------------------- Customer Schemas -----------------------
+
+# Type definition for a customer account.
 type CustomerAccount {
-  id: ID! 
-  accountName: String!
-  accountEmail: String!
-  accountPassword: String!
-  accountContact: String!
-  accountAddress: String!
-  createdAt: String!
+  id: ID!                        # Unique identifier for the customer account
+  accountName: String!           # Name of the customer
+  accountEmail: String!          # Email associated with the customer account
+  accountPassword: String!       # Password for authentication
+  accountContact: String!        # Contact number of the customer
+  accountAddress: String!        # Address of the customer
+  createdAt: String!             # Timestamp of account creation
+}
+
+# Input type for creating a new customer account.
+input NewCustomerAccountInput {
+  accountName: String!           # Name of the customer
+  accountEmail: String!          # Email for the account
+  accountPassword: String!       # Password for authentication
+  accountContact: String!        # Contact number
+  accountAddress: String!        # Address of the customer
+  businessAccountId: String      # Optional ID of a business to link this account to
+}
+
+# ------------------------- Order Schemas -------------------------
+
+# Type definition for an order.
+type CustomSchemaInput {
+  fieldName: String!
+  fieldType: String!
+  isRequired: Boolean!
+}
+
+type CustomOrderSchema{
+    id: ID!
+    business_id: ID! 
+    fields: [CustomSchemaInput!] 
 }
 
 type Order {
-  id: ID!
-  productName: String!
-  productUrl: String!
-  productPrice: Float!
-  productPriceCurrency: String!
-  productDescription: String!
-  orderedByCustomerEmail: ID!
-  business_id: ID!
-  orderDeadline: String!
-  orderPlacedDate: String!
-  orderStatus: String!
+  id: ID!                        # Unique identifier for the order
+  productName: String!           # Name of the product
+  productUrl: String!            # URL of the product
+  productPrice: Float!           # Price of the product
+  productPriceCurrency: String!  # Currency of the product price
+  productDescription: String!    # Description of the product
+  orderedByCustomerEmail: ID!    # Email of the customer who placed the order
+  business_id: ID!               # ID of the business associated with the order
+  orderDeadline: String!         # Deadline for completing the order
+  orderPlacedDate: String!       # Date when the order was placed
+  orderStatus: String!           # Status of the order
+  CustomFieldsData: CustomFieldsDataType 
 }
 
-union LoginAccountDetails = CustomerAccount | BusinessAccount 
-
-type LoginResponse{
-    accessToken: String!
-    accountDetails: LoginAccountDetails! 
+# Enum type for order status options.
+enum OrderStatusTypes {
+  PENDING                        # Order is pending
+  READY_TO_BE_SHIPPED            # Order is ready to be shipped
+  SHIPPED                        # Order has been shipped
+  DELIVERED                      # Order has been delivered
 }
 
+# Input type for creating a new order.
+input NewOrderInput {
+  productName: String!           # Name of the product
+  productUrl: String             # URL of the product
+  productPrice: Float!           # Price of the product
+  productPriceCurrency: String!  # Currency of the product price
+  productDescription: String!    # Description of the product
+  orderedByCustomerEmail: ID!    # Email of the customer who placed the order
+  business_id: ID!               # ID of the business associated with the order
+  orderDeadline: String!         # Deadline for completing the order
+  orderPlacedDate: String        # Date when the order was placed (optional)
+  orderStatus: OrderStatusTypes  # Status of the order
+  CustomFieldsData: CustomFieldsDataType 
+}
+
+# Input type for updating an existing order.
+input UpdateOrderInput {
+  id: ID!                        # Unique identifier for the order
+  productName: String            # Updated name of the product (optional)
+  productUrl: String             # Updated URL of the product (optional)
+  productPrice: Float            # Updated price of the product (optional)
+  productPriceCurrency: String   # Updated currency of the product price (optional)
+  productDescription: String     # Updated description of the product (optional)
+  orderedByCustomerEmail: ID     # Updated email of the customer (optional)
+  orderDeadline: String          # Updated order deadline (optional)
+  orderPlacedDate: String        # Updated date when the order was placed (optional)
+  orderStatus: OrderStatusTypes  # Updated status of the order (optional)
+  CustomFieldsData: CustomFieldsDataType 
+}
+
+# -------------------------- Query Types --------------------------
+
+# Root query type for fetching data.
 type Query {
-  getBusinessAccounts: [BusinessAccount!]!
-  getCustomerAccounts: [CustomerAccount!]!  # Changed to CustomerAccount
-  getCustomersByBusinessId(business_id: ID!): [BusinessCustomer!]!  # Corrected parameter name
-  getCustomerByIdOrEmail(input: AccountQueryInput!): CustomerAccount!
-  getBusinessByIdOrEmail(input: AccountQueryInput!): BusinessAccount!
-  getOrders(input: OrderQueryInput): [Order!]!
+  getBusinessAccounts: [BusinessAccount!]!       # Fetch all business accounts
+  getCustomerAccounts: [CustomerAccount!]!       # Fetch all customer accounts
+  getCustomersByBusinessId(business_id: ID!): [BusinessCustomer!]! # Fetch customers by business ID
+  getCustomerByIdOrEmail(input: AccountQueryInput!): CustomerAccount! # Fetch a customer by ID or email
+  getBusinessByIdOrEmail(input: AccountQueryInput!): BusinessAccount! # Fetch a business by ID or email
+  getOrders(input: OrderQueryInput): [Order!]!   # Fetch orders with optional filters
 }
 
+# ------------------------ Mutation Types -------------------------
+
+# Root mutation type for modifying data.
 type Mutation {
-  # Business - business can write and read data 
+  # Business-related mutations
   createBusinessAccount(input: NewBusinessAccountInput!): BusinessAccount!
   loginAsBusiness(input: LoginDetailsInput!): LoginResponse!
-  createOrder(input: NewOrderInput!): Order! 
+  createOrder(input: NewOrderInput!): Order!
   deleteBusinessAccount(input: LoginDetailsInput!): String!
   linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
   updateOrder(input: UpdateOrderInput!): Order!
   deleteOrder(order_id: ID!): String!
 
-  # Customer - customer can only read data
+  # Customer-related mutations
   createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
   loginAsCustomer(input: LoginDetailsInput!): LoginResponse!
   deleteCustomerAccount(input: LoginDetailsInput!): String!
 }
 
-input LinkAccountToBusinessInput{
-     business_id: String!
-     customer_id: String!
+# -------------------------- Input Types --------------------------
+
+# Input type for linking a customer to a business.
+input LinkAccountToBusinessInput {
+  business_id: String!           # ID of the business
+  customer_id: String!           # ID of the customer
 }
 
-input LoginDetailsInput{
-    accountEmail: String!
-    accountPassword: String!
+# Input type for logging in.
+input LoginDetailsInput {
+  accountEmail: String!          # Email of the account
+  accountPassword: String!       # Password of the account
 }
 
-input NewBusinessAccountInput{
-  accountName: String!
-  accountEmail: String!
-  accountPassword: String!
-  accountContact: String!
-  accountAddress: String!
+# Input type for querying orders.
+input OrderQueryInput {
+  business_id: String            # ID of the business (optional)
+  customer_email: String         # Email of the customer (optional)
 }
 
-input NewCustomerAccountInput{
-  accountName: String!
-  accountEmail: String!
-  accountPassword: String!
-  accountContact: String!
-  accountAddress: String!
-  businessAccountId: String
+# Input type for querying accounts.
+input AccountQueryInput {
+  account_id: ID                 # ID of the account (optional)
+  account_email: String          # Email of the account (optional)
 }
 
-input OrderQueryInput{
-  business_id: String 
-  customer_email: String 
+# -------------------------- Union Types --------------------------
+
+# Union type for account details in login responses.
+union LoginAccountDetails = CustomerAccount | BusinessAccount
+
+# Type definition for login responses.
+type LoginResponse {
+  accessToken: String!           # Access token for authentication
+  accountDetails: LoginAccountDetails! # Details of the logged-in account
 }
 
-input AccountQueryInput{
-  account_id: ID
-  account_email: String 
-}
-
-enum OrderStatusTypes {
-    PENDING
-    READY_TO_BE_SHIPPED
-    SHIPPED
-    DELIVERED
-}
-
-input NewOrderInput{
-  productName: String!
-  productUrl: String
-  productPrice: Float!
-  productPriceCurrency: String!
-  productDescription: String!
-  orderedByCustomerEmail: ID!
-  business_id: ID!
-  orderDeadline: String!
-  orderPlacedDate: String
-  orderStatus: OrderStatusTypes
-}
-
-input UpdateOrderInput{
-  id: ID!
-  productName: String
-  productUrl: String
-  productPrice: Float
-  productPriceCurrency: String
-  productDescription: String
-  orderedByCustomerEmail: ID
-  orderDeadline: String
-  orderPlacedDate: String
-  orderStatus: OrderStatusTypes
-}

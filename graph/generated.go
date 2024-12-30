@@ -64,6 +64,18 @@ type ComplexityRoot struct {
 		JoinedDate        func(childComplexity int) int
 	}
 
+	CustomOrderSchema struct {
+		BusinessID func(childComplexity int) int
+		Fields     func(childComplexity int) int
+		ID         func(childComplexity int) int
+	}
+
+	CustomSchemaInput struct {
+		FieldName  func(childComplexity int) int
+		FieldType  func(childComplexity int) int
+		IsRequired func(childComplexity int) int
+	}
+
 	CustomerAccount struct {
 		AccountAddress  func(childComplexity int) int
 		AccountContact  func(childComplexity int) int
@@ -94,6 +106,7 @@ type ComplexityRoot struct {
 
 	Order struct {
 		BusinessID             func(childComplexity int) int
+		CustomFieldsData       func(childComplexity int) int
 		ID                     func(childComplexity int) int
 		OrderDeadline          func(childComplexity int) int
 		OrderPlacedDate        func(childComplexity int) int
@@ -232,6 +245,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCustomer.JoinedDate(childComplexity), true
+
+	case "CustomOrderSchema.business_id":
+		if e.complexity.CustomOrderSchema.BusinessID == nil {
+			break
+		}
+
+		return e.complexity.CustomOrderSchema.BusinessID(childComplexity), true
+
+	case "CustomOrderSchema.fields":
+		if e.complexity.CustomOrderSchema.Fields == nil {
+			break
+		}
+
+		return e.complexity.CustomOrderSchema.Fields(childComplexity), true
+
+	case "CustomOrderSchema.id":
+		if e.complexity.CustomOrderSchema.ID == nil {
+			break
+		}
+
+		return e.complexity.CustomOrderSchema.ID(childComplexity), true
+
+	case "CustomSchemaInput.fieldName":
+		if e.complexity.CustomSchemaInput.FieldName == nil {
+			break
+		}
+
+		return e.complexity.CustomSchemaInput.FieldName(childComplexity), true
+
+	case "CustomSchemaInput.fieldType":
+		if e.complexity.CustomSchemaInput.FieldType == nil {
+			break
+		}
+
+		return e.complexity.CustomSchemaInput.FieldType(childComplexity), true
+
+	case "CustomSchemaInput.isRequired":
+		if e.complexity.CustomSchemaInput.IsRequired == nil {
+			break
+		}
+
+		return e.complexity.CustomSchemaInput.IsRequired(childComplexity), true
 
 	case "CustomerAccount.accountAddress":
 		if e.complexity.CustomerAccount.AccountAddress == nil {
@@ -422,6 +477,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Order.BusinessID(childComplexity), true
+
+	case "Order.CustomFieldsData":
+		if e.complexity.Order.CustomFieldsData == nil {
+			break
+		}
+
+		return e.complexity.Order.CustomFieldsData(childComplexity), true
 
 	case "Order.id":
 		if e.complexity.Order.ID == nil {
@@ -1570,6 +1632,275 @@ func (ec *executionContext) fieldContext_BusinessCustomer_joinedDate(_ context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _CustomOrderSchema_id(ctx context.Context, field graphql.CollectedField, obj *model.CustomOrderSchema) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomOrderSchema_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomOrderSchema_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomOrderSchema",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CustomOrderSchema_business_id(ctx context.Context, field graphql.CollectedField, obj *model.CustomOrderSchema) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomOrderSchema_business_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BusinessID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomOrderSchema_business_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomOrderSchema",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CustomOrderSchema_fields(ctx context.Context, field graphql.CollectedField, obj *model.CustomOrderSchema) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomOrderSchema_fields(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Fields, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CustomSchemaInput)
+	fc.Result = res
+	return ec.marshalOCustomSchemaInput2ᚕᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomSchemaInputᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomOrderSchema_fields(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomOrderSchema",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "fieldName":
+				return ec.fieldContext_CustomSchemaInput_fieldName(ctx, field)
+			case "fieldType":
+				return ec.fieldContext_CustomSchemaInput_fieldType(ctx, field)
+			case "isRequired":
+				return ec.fieldContext_CustomSchemaInput_isRequired(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CustomSchemaInput", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CustomSchemaInput_fieldName(ctx context.Context, field graphql.CollectedField, obj *model.CustomSchemaInput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomSchemaInput_fieldName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FieldName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomSchemaInput_fieldName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomSchemaInput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CustomSchemaInput_fieldType(ctx context.Context, field graphql.CollectedField, obj *model.CustomSchemaInput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomSchemaInput_fieldType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FieldType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomSchemaInput_fieldType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomSchemaInput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CustomSchemaInput_isRequired(ctx context.Context, field graphql.CollectedField, obj *model.CustomSchemaInput) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomSchemaInput_isRequired(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsRequired, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CustomSchemaInput_isRequired(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CustomSchemaInput",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CustomerAccount_id(ctx context.Context, field graphql.CollectedField, obj *model.CustomerAccount) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CustomerAccount_id(ctx, field)
 	if err != nil {
@@ -2159,6 +2490,8 @@ func (ec *executionContext) fieldContext_Mutation_createOrder(ctx context.Contex
 				return ec.fieldContext_Order_orderPlacedDate(ctx, field)
 			case "orderStatus":
 				return ec.fieldContext_Order_orderStatus(ctx, field)
+			case "CustomFieldsData":
+				return ec.fieldContext_Order_CustomFieldsData(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
@@ -2348,6 +2681,8 @@ func (ec *executionContext) fieldContext_Mutation_updateOrder(ctx context.Contex
 				return ec.fieldContext_Order_orderPlacedDate(ctx, field)
 			case "orderStatus":
 				return ec.fieldContext_Order_orderStatus(ctx, field)
+			case "CustomFieldsData":
+				return ec.fieldContext_Order_CustomFieldsData(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
@@ -3092,6 +3427,47 @@ func (ec *executionContext) fieldContext_Order_orderStatus(_ context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Order_CustomFieldsData(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Order_CustomFieldsData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CustomFieldsData, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(model.CustomFieldJSON)
+	fc.Result = res
+	return ec.marshalOCustomFieldsDataType2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldJSON(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Order_CustomFieldsData(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Order",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type CustomFieldsDataType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_getBusinessAccounts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_getBusinessAccounts(ctx, field)
 	if err != nil {
@@ -3480,6 +3856,8 @@ func (ec *executionContext) fieldContext_Query_getOrders(ctx context.Context, fi
 				return ec.fieldContext_Order_orderPlacedDate(ctx, field)
 			case "orderStatus":
 				return ec.fieldContext_Order_orderStatus(ctx, field)
+			case "CustomFieldsData":
+				return ec.fieldContext_Order_CustomFieldsData(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
@@ -5626,7 +6004,7 @@ func (ec *executionContext) unmarshalInputNewOrderInput(ctx context.Context, obj
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerEmail", "business_id", "orderDeadline", "orderPlacedDate", "orderStatus"}
+	fieldsInOrder := [...]string{"productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerEmail", "business_id", "orderDeadline", "orderPlacedDate", "orderStatus", "CustomFieldsData"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5703,6 +6081,13 @@ func (ec *executionContext) unmarshalInputNewOrderInput(ctx context.Context, obj
 				return it, err
 			}
 			it.OrderStatus = data
+		case "CustomFieldsData":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("CustomFieldsData"))
+			data, err := ec.unmarshalOCustomFieldsDataType2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldJSON(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CustomFieldsData = data
 		}
 	}
 
@@ -5750,7 +6135,7 @@ func (ec *executionContext) unmarshalInputUpdateOrderInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerEmail", "orderDeadline", "orderPlacedDate", "orderStatus"}
+	fieldsInOrder := [...]string{"id", "productName", "productUrl", "productPrice", "productPriceCurrency", "productDescription", "orderedByCustomerEmail", "orderDeadline", "orderPlacedDate", "orderStatus", "CustomFieldsData"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5827,6 +6212,13 @@ func (ec *executionContext) unmarshalInputUpdateOrderInput(ctx context.Context, 
 				return it, err
 			}
 			it.OrderStatus = data
+		case "CustomFieldsData":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("CustomFieldsData"))
+			data, err := ec.unmarshalOCustomFieldsDataType2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldJSON(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.CustomFieldsData = data
 		}
 	}
 
@@ -5961,6 +6353,101 @@ func (ec *executionContext) _BusinessCustomer(ctx context.Context, sel ast.Selec
 			}
 		case "joinedDate":
 			out.Values[i] = ec._BusinessCustomer_joinedDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var customOrderSchemaImplementors = []string{"CustomOrderSchema"}
+
+func (ec *executionContext) _CustomOrderSchema(ctx context.Context, sel ast.SelectionSet, obj *model.CustomOrderSchema) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, customOrderSchemaImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CustomOrderSchema")
+		case "id":
+			out.Values[i] = ec._CustomOrderSchema_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "business_id":
+			out.Values[i] = ec._CustomOrderSchema_business_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "fields":
+			out.Values[i] = ec._CustomOrderSchema_fields(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var customSchemaInputImplementors = []string{"CustomSchemaInput"}
+
+func (ec *executionContext) _CustomSchemaInput(ctx context.Context, sel ast.SelectionSet, obj *model.CustomSchemaInput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, customSchemaInputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CustomSchemaInput")
+		case "fieldName":
+			out.Values[i] = ec._CustomSchemaInput_fieldName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "fieldType":
+			out.Values[i] = ec._CustomSchemaInput_fieldType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "isRequired":
+			out.Values[i] = ec._CustomSchemaInput_isRequired(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -6278,6 +6765,8 @@ func (ec *executionContext) _Order(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "CustomFieldsData":
+			out.Values[i] = ec._Order_CustomFieldsData(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6941,6 +7430,16 @@ func (ec *executionContext) marshalNBusinessCustomer2ᚖgithubᚗcomᚋsiyaramsu
 	return ec._BusinessCustomer(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNCustomSchemaInput2ᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomSchemaInput(ctx context.Context, sel ast.SelectionSet, v *model.CustomSchemaInput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CustomSchemaInput(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCustomerAccount2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomerAccount(ctx context.Context, sel ast.SelectionSet, v model.CustomerAccount) graphql.Marshaler {
 	return ec._CustomerAccount(ctx, sel, &v)
 }
@@ -7428,6 +7927,69 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOCustomFieldsDataType2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldJSON(ctx context.Context, v interface{}) (model.CustomFieldJSON, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := model.UnmarshalCustomFieldJSON(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCustomFieldsDataType2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldJSON(ctx context.Context, sel ast.SelectionSet, v model.CustomFieldJSON) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := model.MarshalCustomFieldJSON(v)
+	return res
+}
+
+func (ec *executionContext) marshalOCustomSchemaInput2ᚕᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomSchemaInputᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CustomSchemaInput) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCustomSchemaInput2ᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomSchemaInput(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOFloat2ᚖfloat64(ctx context.Context, v interface{}) (*float64, error) {
