@@ -120,15 +120,44 @@ func (Service *OrderService) GetOrders(input model.OrderQueryInput) ([]*model.Or
 func (Service *OrderService) UpdateOrder(input model.UpdateOrderInput) (*model.Order, error) {
         
         var order model.Order
-
-        result := Service.DB.Model(&order).Where("id = ?", input.ID).Updates(input)
+  
+        tx := Service.DB.Begin()
+    
+        defer func(){
+          if r := recover(); r != nil{
+             tx.Rollback()
+          }
+        }();
+ 
+  
+        regularUpdates := input;
+        regularUpdates.CustomFieldsData = nil;
+    
+        result := tx.Model(&order).Where("id = ?", input.ID).Updates(regularUpdates)
 
         if result.Error != nil {
+          tx.Rollback()
           return nil, result.Error
         }
 
         if result.RowsAffected == 0 {
+            tx.Rollback()
             return nil, fmt.Errorf("no orders found for the given query")
+        }
+
+          if len(input.CustomFieldsData) != 0 {
+              if err := tx.Model(&order).
+                  Where("id = ?", input.ID).
+                  Update("custom_fields_data", 
+                      gorm.Expr("COALESCE(custom_fields_data, '{}'::jsonb) || ?::jsonb", 
+                          input.CustomFieldsData)).Error; err != nil {
+                  tx.Rollback()
+                  return nil, err
+              }
+          }
+
+        if err := tx.Commit().Error; err != nil {
+            return nil, err
         }
 
         if err := Service.DB.First(&order, "id = ?", input.ID).Error; err != nil {
