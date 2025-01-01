@@ -36,7 +36,7 @@ func NewPostgresDb()(db *Postgres){
 
   log.Println("Connected to database")
 
-  if err := gormDb.AutoMigrate(model.BusinessAccount{}, model.CustomerAccount{}, model.BusinessCustomer{}, model.Order{}); err != nil{
+  if err := gormDb.AutoMigrate(model.BusinessAccount{}, model.CustomerAccount{}, model.BusinessCustomer{}, model.Order{}, model.CustomOrderSchema{}); err != nil{
       log.Fatalf("Error while Migrating Models to DB: %s", err.Error())
   }
 
