@@ -1,5 +1,6 @@
 scalar Map
 scalar CustomFieldsDataType
+scalar CustomFieldArray
 # GraphQL schema for OrderSphere
 # This schema supports managing business accounts, customer accounts, and orders.
 
@@ -59,16 +60,27 @@ input NewCustomerAccountInput {
 # ------------------------- Order Schemas -------------------------
 
 # Type definition for an order.
-type CustomSchemaInput {
-  fieldName: String!
-  fieldType: String!
-  isRequired: Boolean!
-}
+# type CustomSchemaData {
+#   fieldName: String!
+#   fieldType: String!
+#   isRequired: Boolean!
+# }
+
+# input CustomSchemaInput {
+#   fieldName: String!
+#   fieldType: String!
+#   isRequired: Boolean!
+# }
 
 type CustomOrderSchema{
     id: ID!
     business_id: ID! 
-    fields: [CustomSchemaInput!] 
+    fields: CustomFieldArray! 
+}
+
+input CustomOrderSchemaInput{
+    business_id: ID! 
+    fields: CustomFieldArray! 
 }
 
 type Order {
@@ -134,6 +146,7 @@ type Query {
   getCustomerByIdOrEmail(input: AccountQueryInput!): CustomerAccount! # Fetch a customer by ID or email
   getBusinessByIdOrEmail(input: AccountQueryInput!): BusinessAccount! # Fetch a business by ID or email
   getOrders(input: OrderQueryInput): [Order!]!   # Fetch orders with optional filters
+  getOrderSchemas(business_id: ID!): CustomOrderSchema!
 }
 
 # ------------------------ Mutation Types -------------------------
@@ -148,7 +161,9 @@ type Mutation {
   linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
   updateOrder(input: UpdateOrderInput!): Order!
   deleteOrder(order_id: ID!): String!
-
+  createOrderSchema(input: CustomOrderSchemaInput!): CustomOrderSchema!
+  updateOrderSchema(input: CustomOrderSchemaInput!): CustomOrderSchema!
+  
   # Customer-related mutations
   createCustomerAccount(input: NewCustomerAccountInput!): CustomerAccount!
   loginAsCustomer(input: LoginDetailsInput!): LoginResponse!

@@ -45,6 +45,16 @@ func (r *mutationResolver) DeleteOrder(ctx context.Context, orderID string) (str
 	return r.OrderRoutes.DeleteOrder(ctx, orderID)
 }
 
+// CreateOrderSchema is the resolver for the createOrderSchema field.
+func (r *mutationResolver) CreateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+	return nil, nil
+}
+
+// UpdateOrderSchema is the resolver for the updateOrderSchema field.
+func (r *mutationResolver) UpdateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+	return r.OrderRoutes.UpdateOrderSchemaRoute(ctx, input)
+}
+
 // CreateCustomerAccount is the resolver for the createCustomerAccount field.
 func (r *mutationResolver) CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error) {
 	return r.AccountRoutes.CreateCustomerAccountRoute(ctx, input)
@@ -88,6 +98,11 @@ func (r *queryResolver) GetBusinessByIDOrEmail(ctx context.Context, input model.
 // GetOrders is the resolver for the getOrders field.
 func (r *queryResolver) GetOrders(ctx context.Context, input *model.OrderQueryInput) ([]*model.Order, error) {
 	return r.OrderRoutes.GetOrdersRoute(ctx, *input)
+}
+
+// GetOrderSchemas is the resolver for the getOrderSchemas field.
+func (r *queryResolver) GetOrderSchemas(ctx context.Context, businessID string) (*model.CustomOrderSchema, error) {
+	return r.OrderRoutes.GetOrderSchemasRoute(ctx, businessID)
 }
 
 // Mutation returns MutationResolver implementation.

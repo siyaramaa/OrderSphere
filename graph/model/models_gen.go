@@ -37,15 +37,14 @@ type BusinessCustomer struct {
 }
 
 type CustomOrderSchema struct {
-	ID         string               `json:"id"`
-	BusinessID string               `json:"business_id"`
-	Fields     []*CustomSchemaInput `json:"fields,omitempty"`
+	ID         string           `json:"id"`
+	BusinessID string           `json:"business_id"`
+	Fields     CustomFieldArray `json:"fields" gorm:"type:jsonb"`
 }
 
-type CustomSchemaInput struct {
-	FieldName  string `json:"fieldName"`
-	FieldType  string `json:"fieldType"`
-	IsRequired bool   `json:"isRequired"`
+type CustomOrderSchemaInput struct {
+	BusinessID string           `json:"business_id"`
+	Fields     CustomFieldArray `json:"fields" gorm:"type:jsonb"`
 }
 
 type CustomerAccount struct {

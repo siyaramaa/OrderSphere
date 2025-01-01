@@ -19,6 +19,10 @@ func mutateHook(b *modelgen.ModelBuild) *modelgen.ModelBuild {
         if field.Name == "CustomFieldsData"{
     			field.Tag += ` gorm:"type:jsonb"`
         }
+         
+        if field.Name == "fields"{
+    			field.Tag += ` gorm:"type:jsonb"`
+      }
 		}
 
 	}

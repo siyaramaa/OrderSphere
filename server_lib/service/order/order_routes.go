@@ -23,3 +23,14 @@ func (r *OrderRoutes) UpdateOrderRoute(ctx context.Context, input model.UpdateOr
 func (r *OrderRoutes) DeleteOrder(ctx context.Context, orderID string) (string, error){
    return r.Service.DeleteOrder(orderID)
 }
+
+// func (r *OrderRoutes) CreateOrderSchemaRoute(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+//    return r.Service.CreateOrderSchema(input)
+// }
+func (r *OrderRoutes) UpdateOrderSchemaRoute(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+   return r.Service.UpdateOrderSchema(input)
+}
+
+func (r *OrderRoutes) GetOrderSchemasRoute(ctx context.Context, BusinessID string) (*model.CustomOrderSchema, error) {
+   return r.Service.GetOrderSchemas(BusinessID)
+}

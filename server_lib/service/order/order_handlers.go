@@ -145,7 +145,7 @@ func (Service *OrderService) UpdateOrder(input model.UpdateOrderInput) (*model.O
             return nil, fmt.Errorf("no orders found for the given query")
         }
 
-          if len(input.CustomFieldsData) != 0 {
+        if len(input.CustomFieldsData) != 0 {
               if err := tx.Model(&order).
                   Where("id = ?", input.ID).
                   Update("custom_fields_data", 
@@ -154,7 +154,7 @@ func (Service *OrderService) UpdateOrder(input model.UpdateOrderInput) (*model.O
                   tx.Rollback()
                   return nil, err
               }
-          }
+        }
 
         if err := tx.Commit().Error; err != nil {
             return nil, err
@@ -180,4 +180,75 @@ func (Service *OrderService) DeleteOrder(orderID string) (string, error) {
         }
  
         return "Order deleted successfully", nil    
+}
+
+
+func (Service *OrderService) GetOrderSchemas(businessID string) (*model.CustomOrderSchema, error) {
+ 
+  var schema model.CustomOrderSchema
+  result := Service.DB.Where("business_id = ?", businessID).Find(&schema)
+
+  if result.Error != nil{
+     return nil, result.Error
+  }
+
+  if result.RowsAffected == 0{
+     return nil, fmt.Errorf("No Order Schema found for the businessID")
+  }
+
+  return &schema, nil;
+}
+
+func (Service *OrderService) CreateOrderSchema(input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error){
+  
+     newOrderSchemaId, _ := uuid.NewUUID()
+     orderSchema := model.CustomOrderSchema{
+         ID: newOrderSchemaId.String(), 
+         BusinessID: input.BusinessID,
+         Fields: input.Fields,    
+     }
+
+     tx := Service.DB.Create(&orderSchema)
+    
+     if tx.RowsAffected == 0{
+          return nil, fmt.Errorf("Failed to create New Order Schema, please try again later.")
+     }
+
+     return &orderSchema, nil    
+}
+
+
+func (Service *OrderService) UpdateOrderSchema(input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+
+  existingSchema, err := Service.GetOrderSchemas(input.BusinessID);
+
+  if err != nil{
+     return Service.CreateOrderSchema(input)
+  }
+
+  // Existing fields
+  var existingFieldsKeyMap = make(map[string]model.CustomField) 
+  for _, field := range existingSchema.Fields{
+       existingFieldsKeyMap[field.Name] = field 
+  }
+
+  // Update Existing fields if it is in input
+  for _, field := range input.Fields{
+       existingFieldsKeyMap[field.Name] = field
+  }
+
+
+  // Updated data
+  var updatedFields []model.CustomField
+  for _, field := range existingFieldsKeyMap{
+       updatedFields = append(updatedFields, field)
+  }
+
+  existingSchema.Fields = updatedFields
+
+  if err := Service.DB.Save(&existingSchema).Error; err != nil{
+     return nil, err 
+  }
+
+  return existingSchema, nil 
 }

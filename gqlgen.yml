@@ -99,6 +99,8 @@ models:
     model: github.com/99designs/gqlgen/graphql.Map
   CustomFieldsDataType:
     model: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldJSON
+  CustomFieldArray:
+    model: github.com/siyaramsujan/graphql-api/graph/model.CustomFieldArray
   # Order:
   #   fields:
   #    CustomFieldsData:
