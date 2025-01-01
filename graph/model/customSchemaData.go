@@ -11,6 +11,7 @@ import (
 )
 
 type CustomField struct {
+  FieldID    *string `json:"fieldId,omitempty"` 
 	Name       string `json:"name"`
 	Type       string `json:"type"`
 	IsRequired bool   `json:"isRequired"`
@@ -41,7 +42,13 @@ func UnmarshalCustomFieldArray(v any) (CustomFieldArray, error) {
 				return nil, fmt.Errorf("expected map for item, got %T", item)
 			}
 
+      var fieldId *string
+      if id, exists := m["fieldId"].(string); exists{
+          fieldId = &id 
+      }
+
 			field := CustomField{
+        FieldID:    fieldId,
 				Name:       m["name"].(string),
 				Type:       m["type"].(string),
 				IsRequired: m["isRequired"].(bool),

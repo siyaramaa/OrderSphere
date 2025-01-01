@@ -161,7 +161,6 @@ type Mutation {
   linkAccountToBusiness(input: LinkAccountToBusinessInput): String!
   updateOrder(input: UpdateOrderInput!): Order!
   deleteOrder(order_id: ID!): String!
-  createOrderSchema(input: CustomOrderSchemaInput!): CustomOrderSchema!
   updateOrderSchema(input: CustomOrderSchemaInput!): CustomOrderSchema!
   
   # Customer-related mutations

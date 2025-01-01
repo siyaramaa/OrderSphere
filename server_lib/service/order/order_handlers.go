@@ -202,6 +202,14 @@ func (Service *OrderService) GetOrderSchemas(businessID string) (*model.CustomOr
 func (Service *OrderService) CreateOrderSchema(input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error){
   
      newOrderSchemaId, _ := uuid.NewUUID()
+  
+     for index := range input.Fields{
+         field := &input.Fields[index]
+         newFieldId, _ := uuid.NewUUID()
+         id := newFieldId.String()
+         field.FieldID = &id 
+     }
+
      orderSchema := model.CustomOrderSchema{
          ID: newOrderSchemaId.String(), 
          BusinessID: input.BusinessID,
@@ -229,12 +237,22 @@ func (Service *OrderService) UpdateOrderSchema(input model.CustomOrderSchemaInpu
   // Existing fields
   var existingFieldsKeyMap = make(map[string]model.CustomField) 
   for _, field := range existingSchema.Fields{
-       existingFieldsKeyMap[field.Name] = field 
+       var fieldId = field.FieldID
+       existingFieldsKeyMap[*fieldId] = field 
   }
 
   // Update Existing fields if it is in input
-  for _, field := range input.Fields{
-       existingFieldsKeyMap[field.Name] = field
+  for index := range input.Fields{
+       field := &input.Fields[index]
+
+       // Validation required for input as it might not have a fieldID
+        if field.FieldID == nil {
+          newFieldId, _ := uuid.NewUUID()
+          id := newFieldId.String()
+          field.FieldID = &id 
+       }
+
+       existingFieldsKeyMap[*field.FieldID] = *field 
   }
 
 
