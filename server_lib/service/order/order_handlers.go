@@ -108,9 +108,6 @@ func (Service *OrderService) GetOrders(input model.OrderQueryInput) ([]*model.Or
     if result.Error != nil {
         return nil, result.Error
     }
-    if result.RowsAffected == 0 {
-        return nil, fmt.Errorf("no orders found for the given query")
-    }
 
     return orders, nil
 }

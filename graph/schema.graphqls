@@ -146,7 +146,7 @@ type Query {
   getCustomerByIdOrEmail(input: AccountQueryInput!): CustomerAccount! # Fetch a customer by ID or email
   getBusinessByIdOrEmail(input: AccountQueryInput!): BusinessAccount! # Fetch a business by ID or email
   getOrders(input: OrderQueryInput): [Order!]!   # Fetch orders with optional filters
-  getOrderSchemas(business_id: ID!): CustomOrderSchema!
+  getOrderSchemas(business_id: String!): CustomOrderSchema!
 }
 
 # ------------------------ Mutation Types -------------------------
