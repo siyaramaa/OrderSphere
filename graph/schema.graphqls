@@ -80,7 +80,7 @@ type CustomOrderSchema{
 
 input CustomOrderSchemaInput{
     business_id: ID! 
-    fields: CustomFieldArray! 
+    fields: CustomFieldArray 
 }
 
 type Order {

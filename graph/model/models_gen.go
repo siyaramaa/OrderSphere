@@ -44,7 +44,7 @@ type CustomOrderSchema struct {
 
 type CustomOrderSchemaInput struct {
 	BusinessID string           `json:"business_id"`
-	Fields     CustomFieldArray `json:"fields" gorm:"type:jsonb"`
+	Fields     CustomFieldArray `json:"fields,omitempty" gorm:"type:jsonb"`
 }
 
 type CustomerAccount struct {

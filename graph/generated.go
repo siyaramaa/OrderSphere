@@ -89,7 +89,6 @@ type ComplexityRoot struct {
 		CreateBusinessAccount func(childComplexity int, input model.NewBusinessAccountInput) int
 		CreateCustomerAccount func(childComplexity int, input model.NewCustomerAccountInput) int
 		CreateOrder           func(childComplexity int, input model.NewOrderInput) int
-		CreateOrderSchema     func(childComplexity int, input model.CustomOrderSchemaInput) int
 		DeleteBusinessAccount func(childComplexity int, input model.LoginDetailsInput) int
 		DeleteCustomerAccount func(childComplexity int, input model.LoginDetailsInput) int
 		DeleteOrder           func(childComplexity int, orderID string) int
@@ -134,7 +133,6 @@ type MutationResolver interface {
 	LinkAccountToBusiness(ctx context.Context, input *model.LinkAccountToBusinessInput) (string, error)
 	UpdateOrder(ctx context.Context, input model.UpdateOrderInput) (*model.Order, error)
 	DeleteOrder(ctx context.Context, orderID string) (string, error)
-	CreateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error)
 	UpdateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error)
 	CreateCustomerAccount(ctx context.Context, input model.NewCustomerAccountInput) (*model.CustomerAccount, error)
 	LoginAsCustomer(ctx context.Context, input model.LoginDetailsInput) (*model.LoginResponse, error)
@@ -365,18 +363,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateOrder(childComplexity, args["input"].(model.NewOrderInput)), true
-
-	case "Mutation.createOrderSchema":
-		if e.complexity.Mutation.CreateOrderSchema == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_createOrderSchema_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CreateOrderSchema(childComplexity, args["input"].(model.CustomOrderSchemaInput)), true
 
 	case "Mutation.deleteBusinessAccount":
 		if e.complexity.Mutation.DeleteBusinessAccount == nil {
@@ -811,29 +797,6 @@ func (ec *executionContext) field_Mutation_createCustomerAccount_argsInput(
 	return zeroVal, nil
 }
 
-func (ec *executionContext) field_Mutation_createOrderSchema_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	arg0, err := ec.field_Mutation_createOrderSchema_argsInput(ctx, rawArgs)
-	if err != nil {
-		return nil, err
-	}
-	args["input"] = arg0
-	return args, nil
-}
-func (ec *executionContext) field_Mutation_createOrderSchema_argsInput(
-	ctx context.Context,
-	rawArgs map[string]interface{},
-) (model.CustomOrderSchemaInput, error) {
-	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-	if tmp, ok := rawArgs["input"]; ok {
-		return ec.unmarshalNCustomOrderSchemaInput2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomOrderSchemaInput(ctx, tmp)
-	}
-
-	var zeroVal model.CustomOrderSchemaInput
-	return zeroVal, nil
-}
-
 func (ec *executionContext) field_Mutation_createOrder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1149,7 +1112,7 @@ func (ec *executionContext) field_Query_getOrderSchemas_argsBusinessID(
 ) (string, error) {
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("business_id"))
 	if tmp, ok := rawArgs["business_id"]; ok {
-		return ec.unmarshalNID2string(ctx, tmp)
+		return ec.unmarshalNString2string(ctx, tmp)
 	}
 
 	var zeroVal string
@@ -2698,69 +2661,6 @@ func (ec *executionContext) fieldContext_Mutation_deleteOrder(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteOrder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_createOrderSchema(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_createOrderSchema(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateOrderSchema(rctx, fc.Args["input"].(model.CustomOrderSchemaInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.CustomOrderSchema)
-	fc.Result = res
-	return ec.marshalNCustomOrderSchema2ᚖgithubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomOrderSchema(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_createOrderSchema(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_CustomOrderSchema_id(ctx, field)
-			case "business_id":
-				return ec.fieldContext_CustomOrderSchema_business_id(ctx, field)
-			case "fields":
-				return ec.fieldContext_CustomOrderSchema_fields(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type CustomOrderSchema", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_createOrderSchema_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -5972,7 +5872,7 @@ func (ec *executionContext) unmarshalInputCustomOrderSchemaInput(ctx context.Con
 			it.BusinessID = data
 		case "fields":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fields"))
-			data, err := ec.unmarshalNCustomFieldArray2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldArray(ctx, v)
+			data, err := ec.unmarshalOCustomFieldArray2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldArray(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6776,13 +6676,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteOrder":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteOrder(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "createOrderSchema":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createOrderSchema(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -8117,6 +8010,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	res := graphql.MarshalBoolean(*v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOCustomFieldArray2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldArray(ctx context.Context, v interface{}) (model.CustomFieldArray, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := model.UnmarshalCustomFieldArray(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCustomFieldArray2githubᚗcomᚋsiyaramsujanᚋgraphqlᚑapiᚋgraphᚋmodelᚐCustomFieldArray(ctx context.Context, sel ast.SelectionSet, v model.CustomFieldArray) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := model.MarshalCustomFieldArray(v)
 	return res
 }
 

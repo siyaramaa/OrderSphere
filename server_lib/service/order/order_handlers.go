@@ -232,11 +232,13 @@ func (Service *OrderService) UpdateOrderSchema(input model.CustomOrderSchemaInpu
   }
 
   // Existing fields
-  var existingFieldsKeyMap = make(map[string]model.CustomField) 
-  for _, field := range existingSchema.Fields{
-       var fieldId = field.FieldID
-       existingFieldsKeyMap[*fieldId] = field 
-  }
+  // var existingFieldsKeyMap = make(map[string]model.CustomField) 
+  // for _, field := range existingSchema.Fields{
+  //      var fieldId = field.FieldID
+  //      existingFieldsKeyMap[*fieldId] = field 
+  // }
+  // Updated data
+  var updatedFields []model.CustomField
 
   // Update Existing fields if it is in input
   for index := range input.Fields{
@@ -249,15 +251,14 @@ func (Service *OrderService) UpdateOrderSchema(input model.CustomOrderSchemaInpu
           field.FieldID = &id 
        }
 
-       existingFieldsKeyMap[*field.FieldID] = *field 
+       updatedFields = append(updatedFields, *field)
+       // existingFieldsKeyMap[*field.FieldID] = *field 
   }
 
 
-  // Updated data
-  var updatedFields []model.CustomField
-  for _, field := range existingFieldsKeyMap{
-       updatedFields = append(updatedFields, field)
-  }
+  // for _, field := range existingFieldsKeyMap{
+  //      updatedFields = append(updatedFields, field)
+  // }
 
   existingSchema.Fields = updatedFields
 

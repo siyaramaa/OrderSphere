@@ -45,11 +45,6 @@ func (r *mutationResolver) DeleteOrder(ctx context.Context, orderID string) (str
 	return r.OrderRoutes.DeleteOrder(ctx, orderID)
 }
 
-// CreateOrderSchema is the resolver for the createOrderSchema field.
-func (r *mutationResolver) CreateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
-	return nil, nil
-}
-
 // UpdateOrderSchema is the resolver for the updateOrderSchema field.
 func (r *mutationResolver) UpdateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
 	return r.OrderRoutes.UpdateOrderSchemaRoute(ctx, input)
@@ -113,3 +108,15 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *mutationResolver) CreateOrderSchema(ctx context.Context, input model.CustomOrderSchemaInput) (*model.CustomOrderSchema, error) {
+	return nil, nil
+}
+*/
